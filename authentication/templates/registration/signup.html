@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Создание аккаунта Rift{% endblock %}
+{% block css_extra %}
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+    <link rel="stylesheet" href="{% static 'css/assistant.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="bg">
+        <h2>Регистрация</h2>
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="element">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div>{{ field.errors }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <div class="agree">
+                <input id="agree" type="checkbox" required>
+                <label for="agree">Я принимаю <a href="#"><b>Лицензионное соглашение</b></a></label>
+            </div>
+            <div class="buttons">
+                <button type="submit" class="btn">
+                    <svg class="icon" width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Зарегистрироваться
+                </button>
+                <a href="{% url 'authentication:assistant' %}" class="btn">
+                    <svg class="icon" width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 12H4M4 12L10 18M4 12L10 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Назад
+                </a>
+            </div>
+        </form>
+    </div>
+{% endblock %}

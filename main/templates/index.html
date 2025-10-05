@@ -1,0 +1,21 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru" translate="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добро пожаловать в Rift messenger!</title>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main_page.css' %}">
+    <link rel="stylesheet" href="{% static 'css/background.css' %}">
+    <link rel="icon" href="{% static 'images/icon.png' %}">
+</head>
+<body>
+    <div class="head">
+        <img id="rift" src="{% static 'images/icon.png' %}">
+        <h1>Представляем - "Rift messenger"</h1>
+        <p>Инновационный международный мессенджер с новой технологией шифрования ваших сообщений R2HW!</p>
+        <a href="{% url 'authentication:assistant' %}"><button class="btn">Начать общение!</button></a>
+    </div>
+</body>
+</html>

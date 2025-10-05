@@ -1,0 +1,87 @@
+body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+form, h2 {
+    color: #fff;
+}
+
+h2{
+    text-align: center;
+    font-size: 68px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    max-width: 600px;
+}
+
+.element {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-block: 15px;
+}
+
+input {
+    background-color: rgba(90, 90, 90, 0.2);
+    outline: 2px solid rgba(90, 90, 90, 0.3);
+    backdrop-filter: blur(300px);
+    color: white;
+    border: none;
+    padding: 15px;
+    font-size: 18px;
+    border-radius: 25px;
+}
+
+input:focus {
+    box-shadow: 0 10px 20px rgba(123, 233, 164, 0.3);
+    background-color: rgb(123, 233, 164);
+    outline: 2px solid rgb(123, 233, 164);
+    color: #000;
+}
+
+label {
+    font-size: 24px;
+    color: #fff;
+    margin: 0 0 5px 5px;
+}
+
+.agree {
+    width: 100%;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+#agree {
+    accent-color: rgb(123, 233, 164);
+}
+
+#agree:checked {
+    background-color: rgb(123, 233, 164);
+}
+
+.agree label a:hover {
+    text-decoration: underline;
+}
+
+.buttons {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.buttons button {
+    margin-inline: 5px;
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+}

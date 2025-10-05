@@ -1,0 +1,166 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    font-family: 'Arial', sans-serif;
+    overflow-x: hidden;
+    /* outline: 0.1px solid red; */
+}
+
+a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.icon {
+    margin-inline: 5px;
+}
+
+.small {
+    outline: 2px solid rgba(90, 90, 90, 0.3);
+    backdrop-filter: blur(300px);
+    color: #fff;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.1em;
+    border-radius: 25px;
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.2) !important;
+    margin: 0;
+    padding: 0 !important;
+    width: 50px !important;
+    height: 50px !important;
+    margin-block: 5px;
+}
+
+.small:hover {
+    box-shadow: 0 10px 20px rgba(123, 233, 164, 0.3);
+    background-color: rgb(123, 233, 164) !important;
+    outline: 2px solid rgb(123, 233, 164);
+    color: #000;
+}
+
+.small .icon {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    padding: 0;
+}
+
+.bg {
+    background: rgba(0, 0, 0, 0.2);
+    outline: 2px solid rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.btn {
+    background-color: rgba(90, 90, 90, 0.2);
+    outline: 2px solid rgba(90, 90, 90, 0.3);
+    backdrop-filter: blur(300px);
+    color: #fff;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.1em;
+    border-radius: 25px;
+    cursor: pointer;
+}
+
+.start {
+    border-radius: 25px 0 0 25px;
+}
+
+.center {
+    border-radius: 0;
+}
+
+.end {
+    border-radius: 0 25px 25px 0;
+}
+
+.left {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    height: 50px;
+    overflow: visible;
+}
+
+.right {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    height: 50px;
+    overflow: visible;
+}
+
+.btn:hover {
+    box-shadow: 0 10px 20px rgba(123, 233, 164, 0.3);
+    background-color: rgb(123, 233, 164);
+    outline: 2px solid rgb(123, 233, 164);
+    color: #000;
+}
+
+.head {
+    background: rgba(0, 0, 0, 0.2);
+    outline: 2px solid rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 600px;
+    width: 90%;
+    position: relative;
+}
+
+.head h1 {
+    position: relative;
+    color: #fff;
+    margin-bottom: 20px;
+    font-size: 2.5em;
+    font-weight: bold;
+    z-index: 200;
+}
+
+.head p {
+    color: #fff;
+    margin-bottom: 30px;
+    font-size: 1.2em;
+    line-height: 1.6;
+}
+
+.head button {
+    background-color: rgba(90, 90, 90, 0.2);
+    outline: 2px solid rgba(90, 90, 90, 0.3);
+    backdrop-filter: blur(300px);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.1em;
+    border-radius: 25px;
+    cursor: pointer;
+}
+
+.head button:hover {
+    box-shadow: 0 10px 20px rgba(123, 233, 164, 0.3);
+    background-color: rgb(123, 233, 164);
+    outline: 2px solid rgb(123, 233, 164);
+}
+
+#rift {
+    width: 100px;
+    position: absolute;
+    right: 18%;
+    top: 15%;
+    rotate: 13deg;
+}

@@ -1,0 +1,322 @@
+.chats_menu {
+    position: fixed;
+    width: 300px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    padding: 10px;
+    border-radius: 0 15px 15px 0;
+    transition: width 0.3s ease;
+}
+
+.chat, .chat_noHover {
+    width: calc(100% - 20px);
+    height: 70px !important;
+    overflow-x: visible;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    color: #fff;
+    cursor: pointer;
+    margin-block: 5px;
+}
+
+.chat_noHover {
+    cursor: auto;
+}
+
+.chat:hover, .chat.active {
+    box-shadow: 0 10px 20px rgba(123, 233, 164, 0.3);
+    background-color: rgb(123, 233, 164);
+    outline: 2px solid rgb(123, 233, 164);
+    color: #000;
+}
+
+.talker {
+    width: 145%;
+    height: 145%;
+    transform: translate(-15%, -15%);
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.avatar_container {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.2);
+    outline: 2px solid rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.talker_name, .last_messege {
+    overflow: hidden;
+    max-width: calc(100% - 10px);
+    height: 18px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.chat_info {
+    width: calc(100% - 50px);
+    position: relative;
+    left: 5px;
+}
+
+.no_chats {
+    position: absolute;
+    text-align: center;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-size: 19px;
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+}
+
+.chat_content {
+    position: fixed;
+    right: -100%;
+    top: 0;
+    width: calc(100% - 300px);
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 15px 0 0 15px;
+    transition: right 0.3s ease, width 0.3s ease;
+    overflow-y: hidden;
+}
+
+.chat_content.active {
+    right: -10px;
+}
+
+.chat_content.hide {
+    width: calc(100% - 90px);
+}
+
+.chat_content.hide.active {
+    right: -10px;
+}
+
+.hide_chats {
+    margin: 0;
+    padding: 0;
+    align-self: end;
+    margin-bottom: 10px;
+    width: 50px;
+    height: 50px;
+}
+
+.hide_chats .icon {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    margin: 0;
+}
+
+.hide_chats.hide .icon {
+    left: 0;
+    margin-left: calc(50% - 9px);
+    transform: rotate(180deg);
+}
+
+.hide_chats.hide {
+    align-self: center;
+}
+
+.chats_menu.hide {
+    width: 90px;
+}
+
+.user_info {
+    width: 100%
+}
+
+.user_info .avatar_container {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+}
+
+.user_info_extra {
+    color: #fff;
+    margin-left: 5px;
+    font-size: 10px;
+    margin-left: 55px;
+    width: calc(100% - 100px);
+}
+
+.user_info_extra.hide {
+    display: none;
+}
+
+.chats {
+    width: calc(100% + 20px);
+    overflow-y: scroll;
+    overscroll-behavior: contain;
+    position: relative;
+    left: -10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: calc(100vh - 160px);
+}
+
+.message {
+    background: rgba(0, 0, 0, 0.2);
+    outline: 2px solid rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    margin-block: 10px;
+    display: flex;
+    align-items: start;
+    color: #fff;
+    width: fit-content;
+    max-width: 70%;
+    min-width: 200px;
+    position: relative;
+}
+
+.message_content {
+    margin-left: 10px;
+}
+
+.message_time {
+    color: #999;
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+}
+
+.upper_chat {
+    color: #fff;
+    display: flex;
+    align-items: center;
+    overflow-y: visible;
+    padding: 20px 0;
+    margin: 0;
+    position: relative;
+    background: transparent;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    width: calc(100% - 30px);
+}
+
+.messages {
+    margin-top: 70px;
+    padding: 10px;
+    height: calc(100vh - 205px);
+    overflow-y: scroll;
+}
+
+.close_chat {
+    width: 50px;
+    height: 50px;
+    margin: 0;
+    padding: 0;
+    background: rgba(0, 0, 0, 0.2);
+    margin-inline: 10px;
+}
+
+.close_chat .icon {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    margin: 0;
+}
+
+.send_message_field {
+    color: #fff;
+    display: flex;
+    align-items: center;
+    overflow-y: visible;
+    padding: 20px 0;
+    margin: 0;
+    position: relative;
+    background: transparent;
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    width: calc(100% - 30px);
+    height: 80px;
+}
+
+.send_message_field form {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    position: absolute;
+    width: 100%;
+    padding: 10px;
+}
+
+.send_message_input {
+    background-color: rgba(90, 90, 90, 0.2);
+    outline: 2px solid rgba(90, 90, 90, 0.3);
+    backdrop-filter: blur(300px);
+    color: white;
+    border: none;
+    padding: 15px;
+    font-size: 18px;
+    border-radius: 25px;
+    margin-right: 10px;
+    width: calc(100% - 170px);
+}
+
+.send_message_input:focus {
+    box-shadow: 0 10px 20px rgba(123, 233, 164, 0.3);
+    background-color: rgb(123, 233, 164);
+    outline: 2px solid rgb(123, 233, 164);
+    color: #000;
+}
+
+.send_message_field form .btn {
+    width: 50px;
+    height: 50px;
+    margin: 0;
+    padding: 0;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.send_message_field form .btn:hover {
+    box-shadow: 0 10px 20px rgba(123, 233, 164, 0.3);
+    background-color: rgb(123, 233, 164);
+    outline: 2px solid rgb(123, 233, 164);
+    color: #000;
+}
+
+.send_message_field form .icon {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    margin: 0;
+}
+
+.settings {
+    display: block;
+}
+
+.settings.hide {
+    display: none;
+}
+
+.settings:hover .icon {
+    left: 0;
+    top: 0;
+    margin-left: calc(50% - 9px);
+    margin-top: calc(50% - 9px);
+    transform: rotate(180deg);
+}

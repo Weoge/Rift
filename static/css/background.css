@@ -1,0 +1,26 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    font-family: "Arial", sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #66ea96, #1a8e4e, #66ea96, #1a8e4e);
+    background-size: 400% 400%;
+    min-height: 100vh;
+    animation: gradientShift 8s ease infinite;
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}

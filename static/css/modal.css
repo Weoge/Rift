@@ -1,0 +1,14 @@
+.modal {
+    display: none;
+}
+
+.modal.visible {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 350px;
+    min-height: 600px;
+    z-index: 100;
+}
