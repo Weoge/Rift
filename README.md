@@ -1,5 +1,5 @@
 # 🌍 Rift Messenger #
-![GitHub stars](https://img.shields.io/github/stars/weoge/rift?style=social)
+![GitHub stars](https://img.shields.io/github/stars/Weoge/Rift?style=social)
 ![Made with Love](https://img.shields.io/badge/Made%20with-%E2%9D%A4-red) 
 
 Rift — это современный, быстрый и безопасный мессенджер, разработанный на территории РФ с нуля.
