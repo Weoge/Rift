@@ -91,7 +91,7 @@ DATABASES = {
         'NAME': os.environ.get("POSTGRES_DB", 'rift'),
         'USER': os.environ.get("POSTGRES_USER", 'riftadmin'),
         'PASSWORD': os.environ.get("POSTGRES_PASSWORD", 'riftadmin'),
-        'HOST': os.environ.get("POSTGRES_HOST", 'localhost'),
+        'HOST': os.environ.get("POSTGRES_HOST", 'db'),
         'PORT': os.environ.get("POSTGRES_PORT", 5432),
     }
 }
