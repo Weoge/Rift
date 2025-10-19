@@ -1,0 +1,9 @@
+@font-face {
+    font-family: "IntroBold";
+    src: url('./fonts/IntroDemo-BlackCAPS.otf');
+}
+
+@font-face {
+    font-family: "Intro";
+    src: url('./fonts/IntroDemoCond-LightCAPS.otf');
+}

@@ -320,3 +320,17 @@
     margin-top: calc(50% - 9px);
     transform: rotate(180deg);
 }
+
+.chat {
+    transform: translateX(-110%);
+    animation: show-in 0.8s ease forwards;
+}
+
+@keyframes show-in {
+    from {
+        transform: translateX(-110%);
+    }
+    to {
+        transform: translateX(0);
+    }    
+}

@@ -1,0 +1,89 @@
+@import url('../../lib/fonts.css');
+
+* {
+    color: #fff;
+}
+
+header {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    width: calc(100% - 20px);
+    border-radius: 150px !important;
+    padding: 30px !important;
+    display: flex;
+    align-items: center;
+}
+
+@keyframes slideDown {
+    to {
+        transform: translateY(-0);
+    }
+}
+
+.header-left {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    border-radius: 150px !important;
+    padding: 30px !important;
+    display: flex;
+    align-items: center;
+    width: auto;
+    transform: translateY(-100%);
+    animation: slideDown 0.8s ease forwards;
+}
+
+.header-right {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    border-radius: 150px !important;
+    padding: 30px !important;
+    display: flex;
+    align-items: center;
+    width: auto;
+    transform: translateY(-100%);
+    animation: slideDown 0.8s ease forwards;
+}
+
+.font {
+    font-family: 'Intro';
+}
+
+.font-bold {
+    font-family: 'IntroBold';
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+}
+
+.nav li {
+    margin-inline: 10px;
+    font-size: 32px;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.select_bar {
+    border-radius: 150px !important;
+    margin: 5px !important;
+    z-index: 1;
+    position: absolute;
+    padding: 5px !important;
+    height: 40px;
+    box-shadow: 0 10px 20px rgba(123, 233, 164, 0.3);
+    background-color: rgb(123, 233, 164);
+    outline: 2px solid rgb(123, 233, 164);
+    width: 80px;
+}
+
+.btn {
+    margin: 10px;
+    border-radius: 60px;
+    font-size: 24px;
+    padding: 10px 20px !important;
+    margin: 5px;
+}

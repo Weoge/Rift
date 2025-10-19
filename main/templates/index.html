@@ -8,14 +8,28 @@
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
     <link rel="stylesheet" href="{% static 'css/main_page.css' %}">
     <link rel="stylesheet" href="{% static 'css/background.css' %}">
+    <link rel="stylesheet" href="{% static 'css/landing/landing.css' %}">
     <link rel="icon" href="{% static 'images/icon.png' %}">
 </head>
 <body>
-    <div class="head">
-        <img id="rift" src="{% static 'images/icon.png' %}">
-        <h1>Представляем - "Rift messenger"</h1>
-        <p>Инновационный международный мессенджер с новой технологией шифрования ваших сообщений R2HW!</p>
-        <a href="{% url 'authentication:assistant' %}"><button class="btn">Начать общение!</button></a>
-    </div>
+    <header>
+        <div class="left header-left bg">
+            <ul class="nav">
+                <li class="font-bold nav-select">Rift</li>
+                <li class="font nav-select">Инфо</li>
+                <li class="font nav-select">Разработчики</li>
+                <li class="font nav-select">FAQ</li>
+                <li class="font nav-select">Поддержка</li>
+                <div class="select_bar bg" style="width: 88.3833px; left: 25px;"></div>
+            </ul>
+        </div>
+        <div class="right header-right bg">
+            <ul class="nav">
+                <li class="font-bold"><button class="btn"><a href="{% url 'authentication:login' %}" class="font-bold">Вход</a></button></li>
+                <li class="font-bold"><button class="btn"><a href="{% url 'authentication:signup' %}" class="font-bold">Регистрация</a></button></li>
+            </ul>
+        </div>
+    </header>
+    <script src="{% static 'js/nav_select.js' %}" defer></script>
 </body>
 </html>
