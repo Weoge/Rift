@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Добро пожаловать в Rift messenger!</title>
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
-    <link rel="stylesheet" href="{% static 'css/main_page.css' %}">
+    <link rel="stylesheet" href="{% static 'css/modal.css' %}">
+    <link rel="stylesheet" href="{% static 'css/blur.css' %}">
     <link rel="stylesheet" href="{% static 'css/background.css' %}">
     <link rel="stylesheet" href="{% static 'css/landing/landing.css' %}">
     <link rel="icon" href="{% static 'images/icon.png' %}">
@@ -15,11 +16,11 @@
     <header>
         <div class="left header-left bg">
             <ul class="nav">
-                <li class="font-bold nav-select">Rift</li>
-                <li class="font nav-select">Инфо</li>
-                <li class="font nav-select">Разработчики</li>
-                <li class="font nav-select">FAQ</li>
-                <li class="font nav-select">Поддержка</li>
+                <a href="/#section-main" class="nav-select"><li class="font-bold">Rift</li></a>
+                <a href="/#section-info" class="nav-select"><li class="font">Инфо</li></a>
+                <a href="/#section-developers" class="nav-select"><li class="font">Разработчики</li></a>
+                <a href="/#section-faq" class="nav-select"><li class="font">FAQ</li></a>
+                <a href="/#section-support" class="nav-select"><li class="font">Поддержка</li></a>
                 <div class="select_bar bg" style="width: 88.3833px; left: 25px;"></div>
             </ul>
         </div>
@@ -30,6 +31,41 @@
             </ul>
         </div>
     </header>
+    <main>
+        <div id="section-main" class="section">
+            <img src="{% static 'images/icon.png' %}" id="logo">
+            <h1 class="font-bold" id="name">Что такое Rift?</h1>
+            <p class="font" id="desc">
+                Rift — это современный, быстрый и безопасный мессенджер, разработанный на территории РФ с нуля. Он объединяет пользователей по всему миру, обеспечивая стабильную связь, конфиденциальность и удобство общения.
+            </p>
+            <p class="font" id="desc2">
+                Уникальная технология безопасности — R2HM. Rift использует собственную технологию шифрования R2HM (Request 2 Hashed Meta), которая сочетает преимущества симметричных и асимметричных алгоритмов, обеспечивая:
+            </p>
+            <p class="font" id="item1" style="text-align: center;"> • Абсолютную защиту личной переписки</p>
+            <p class="font" id="item2" style="text-align: center;"> • Ускоренное шифрование сообщений без потери производительности </p>
+            <p class="font" id="item3" style="text-align: center;"> • Безопасную передачу данных между устройствами и серверами</p>
+            <p class="font-bold" id="desc3">
+                Наша миссия - cоздать независимую, безопасную и удобную экосистему связи, где пользователь полностью контролирует свои данные.
+            </p>
+            <button class="btn start font-bold" onclick="showModal('login'); on_blur();">Начать!</button>
+        </div>
+        <div id="section-info" class="section">
+            
+        </div>
+        <div id="section-developers" class="section">
+            
+        </div>
+        <div id="section-faq" class="section">
+            
+        </div>
+        <div id="section-support" class="section">
+            
+        </div>
+    </main>
+    <div class="modal bg"></div>
+    <div class="blur"></div>
     <script src="{% static 'js/nav_select.js' %}" defer></script>
+    <script src="{% static 'js/modal.js' %}"></script>
+    <script src="{% static 'js/blur.js' %}"></script>
 </body>
 </html>

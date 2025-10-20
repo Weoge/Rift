@@ -322,15 +322,14 @@
 }
 
 .chat {
-    transform: translateX(-110%);
+    transform: translateX(-50px);
+    opacity: 0%;
     animation: show-in 0.8s ease forwards;
 }
 
 @keyframes show-in {
-    from {
-        transform: translateX(-110%);
-    }
     to {
         transform: translateX(0);
+        opacity: 100%;
     }    
 }
