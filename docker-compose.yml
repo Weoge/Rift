@@ -24,7 +24,8 @@ services:
       - POSTGRES_USER=riftadmin
       - POSTGRES_PASSWORD=riftadmin
       - POSTGRES_DB=rift
-      - DB_HOST=db
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
     depends_on:
       - db
     command: >
