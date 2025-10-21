@@ -8,13 +8,14 @@
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
     <link rel="stylesheet" href="{% static 'css/modal.css' %}">
     <link rel="stylesheet" href="{% static 'css/blur.css' %}">
-    <link rel="stylesheet" href="{% static 'css/background.css' %}">
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+    <link rel="stylesheet" href="{% static 'css/background_dark.css' %}">
     <link rel="stylesheet" href="{% static 'css/landing/landing.css' %}">
     <link rel="icon" href="{% static 'images/icon.png' %}">
 </head>
 <body>
     <header>
-        <div class="left header-left bg">
+        <div class="header-main bg">
             <ul class="nav">
                 <a href="/#section-main" class="nav-select"><li class="font-bold">Rift</li></a>
                 <a href="/#section-info" class="nav-select"><li class="font">Инфо</li></a>
@@ -24,30 +25,24 @@
                 <div class="select_bar bg" style="width: 88.3833px; left: 25px;"></div>
             </ul>
         </div>
-        <div class="right header-right bg">
-            <ul class="nav">
-                <li class="font-bold"><button class="btn"><a href="{% url 'authentication:login' %}" class="font-bold">Вход</a></button></li>
-                <li class="font-bold"><button class="btn"><a href="{% url 'authentication:signup' %}" class="font-bold">Регистрация</a></button></li>
-            </ul>
-        </div>
     </header>
     <main>
         <div id="section-main" class="section">
             <img src="{% static 'images/icon.png' %}" id="logo">
-            <h1 class="font-bold" id="name">Что такое Rift?</h1>
+            <h1 class="font-bold" id="name">Что такое <span class="font-bold gradient-green">Rift?</span></h1>
             <p class="font" id="desc">
                 Rift — это современный, быстрый и безопасный мессенджер, разработанный на территории РФ с нуля. Он объединяет пользователей по всему миру, обеспечивая стабильную связь, конфиденциальность и удобство общения.
             </p>
             <p class="font" id="desc2">
                 Уникальная технология безопасности — R2HM. Rift использует собственную технологию шифрования R2HM (Request 2 Hashed Meta), которая сочетает преимущества симметричных и асимметричных алгоритмов, обеспечивая:
             </p>
-            <p class="font" id="item1" style="text-align: center;"> • Абсолютную защиту личной переписки</p>
-            <p class="font" id="item2" style="text-align: center;"> • Ускоренное шифрование сообщений без потери производительности </p>
-            <p class="font" id="item3" style="text-align: center;"> • Безопасную передачу данных между устройствами и серверами</p>
+            <p class="font-bold gradient-green" id="item1" style="text-align: center; font-size: 32px;"> • Абсолютную защиту личной переписки • </p>
+            <p class="font-bold gradient-green" id="item2" style="text-align: center; font-size: 32px;"> • Ускоренное шифрование сообщений без потери производительности • </p>
+            <p class="font-bold gradient-green" id="item3" style="text-align: center; font-size: 32px;"> • Безопасную передачу данных между устройствами и серверами • </p>
             <p class="font-bold" id="desc3">
                 Наша миссия - cоздать независимую, безопасную и удобную экосистему связи, где пользователь полностью контролирует свои данные.
             </p>
-            <button class="btn start font-bold" onclick="showModal('login'); on_blur();">Начать!</button>
+            <button class="btn start font-bold" onclick="showModal(); on_blur();">Начать!</button>
         </div>
         <div id="section-info" class="section">
             
@@ -62,10 +57,37 @@
             
         </div>
     </main>
-    <div class="modal bg"></div>
+    <div class="modal bg">
+        <div class="modal_up">
+            <button class="small" onclick="closeModal(); off_blur()">
+                <svg class="icon" width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </button>
+            <span class="title font-bold">Вход</span>
+        </div>
+        <form action="{% url 'authentication:login' %}" method="post" class="login_form">
+            {% csrf_token %}
+            {% for field in login_form %}
+                <div class="element">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div>{{ field.errors }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <div class="buttons">
+                <button class="btn font-bold" type="submit">
+                    <svg class="icon" width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 17C6 17.93 6 18.395 6.10222 18.7765C6.37962 19.8117 7.18827 20.6204 8.22354 20.8978C8.60504 21 9.07003 21 10 21H16.2C17.8802 21 18.7202 21 19.362 20.673C19.9265 20.3854 20.3854 19.9265 20.673 19.362C21 18.7202 21 17.8802 21 16.2V7.8C21 6.11984 21 5.27976 20.673 4.63803C20.3854 4.07354 19.9265 3.6146 19.362 3.32698C18.7202 3 17.8802 3 16.2 3H10C9.07003 3 8.60504 3 8.22354 3.10222C7.18827 3.37962 6.37962 4.18827 6.10222 5.22354C6 5.60504 6 6.07003 6 7M12 8L16 12M16 12L12 16M16 12H3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Войти
+                </button>
+            </div>
+            <p class="font">Нет аккаунта? <a href="{% url 'authentication:signup' %}" class="font-bold gradient-green">Зарегестрироваться</a></p>
+        </form>
+    </div>
     <div class="blur"></div>
     <script src="{% static 'js/nav_select.js' %}" defer></script>
     <script src="{% static 'js/modal.js' %}"></script>
     <script src="{% static 'js/blur.js' %}"></script>
+    <script src="{% static 'js/hotkeys.js' %}"></script>
 </body>
 </html>

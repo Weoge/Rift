@@ -37,7 +37,11 @@ CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8080', 
     'http://127.0.0.1:8080',
     'http://*.*.*.*:8080',
-    'http://192.168.0.125:8080'
+    'http://192.168.0.125:8080',
+    'https://localhost:8443', 
+    'https://127.0.0.1:8443',
+    'https://*.*.*.*:8443',
+    'https://192.168.0.125:8443'
 ]
 
 MIDDLEWARE = [
@@ -76,11 +80,11 @@ WSGI_APPLICATION = 'Rift.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get("POSTGRES_DB", 'rift'),
-        'USER': os.environ.get("POSTGRES_USER", 'riftadmin'),
-        'PASSWORD': os.environ.get("POSTGRES_PASSWORD", 'riftadmin'),
-        'HOST': os.environ.get("POSTGRES_HOST", 'localhost'),
-        'PORT': os.environ.get("POSTGRES_PORT", 5432),
+        'NAME': os.getenv("POSTGRES_DB"),
+        'USER': os.getenv("POSTGRES_USER"),
+        'PASSWORD': os.getenv("POSTGRES_PASSWORD"),
+        'HOST': os.getenv("POSTGRES_HOST"),
+        'PORT': os.getenv("POSTGRES_PORT"),
     }
 }
 

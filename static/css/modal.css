@@ -12,3 +12,14 @@
     min-height: 600px;
     z-index: 100;
 }
+
+.modal_up {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+}
+
+.title {
+    margin-left: 15px;
+    font-size: 28px;
+}

@@ -180,3 +180,10 @@ a {
     top: 15%;
     rotate: 13deg;
 }
+
+.gradient-green {
+    background: linear-gradient(135deg, #66ea96, #1a8e4e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}

@@ -156,4 +156,9 @@
     <script src="{% static 'js/hide_chats_bar.js' %}" ></script>
     <script src="{% static 'js/send_message.js' %}"></script>
     <script src="{% static 'js/animation_delay.js' %}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function (){
+            enableNotifications();
+        });
+    </script>
 {% endblock %}
