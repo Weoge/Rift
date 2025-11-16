@@ -13,6 +13,10 @@ a {
     text-decoration: none;
 }
 
+.font-bold {
+    font-weight: bold;
+}
+
 .icon {
     margin-inline: 5px;
 }
@@ -186,4 +190,36 @@ a {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+}
+
+.input {
+    background-color: rgba(90, 90, 90, 0.2);
+    outline: 2px solid rgba(90, 90, 90, 0.3);
+    backdrop-filter: blur(300px);
+    color: white;
+    border: none;
+    padding: 15px;
+    font-size: 18px;
+    border-radius: 25px;
+}
+
+.input:focus {
+    box-shadow: 0 10px 20px rgba(123, 233, 164, 0.3);
+    background-color: rgb(123, 233, 164);
+    outline: 2px solid rgb(123, 233, 164);
+    color: #000;
+}
+
+.element {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-block: 15px;
+    padding: 5px;
+}
+
+.label {
+    font-size: 24px;
+    color: #fff;
+    margin: 0 0 5px 5px;
 }

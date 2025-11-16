@@ -1,5 +1,6 @@
 .modal {
     display: none;
+    padding: 20px !important;
 }
 
 .modal.visible {
@@ -22,4 +23,5 @@
 .title {
     margin-left: 15px;
     font-size: 28px;
+    color: #fff;
 }
