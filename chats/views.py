@@ -173,4 +173,3 @@ def get_profile(request, user_id):
         })
     except User.DoesNotExist:
         return JsonResponse({'error': 'User not found'}, status=404)
-
