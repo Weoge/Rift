@@ -156,6 +156,7 @@ def search_chats(request):
                 continue
             results.append({
                 'username': user.username,
+                'user_id': user.id,
                 'avatar': user_avatar
             })
     

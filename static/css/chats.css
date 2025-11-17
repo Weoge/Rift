@@ -365,3 +365,39 @@
     flex-direction: column;
     align-items: center;
 }
+
+.profile_data {
+    position: absolute;
+    top: 95px;
+    left: 100%;
+    width: calc(100% - 40px);
+    height: calc(100% - 95px - 20px);
+    z-index: 100;
+    transition: all 0.3s ease;
+}
+
+.profile_data.show_profile_data {
+    left: 20px;
+}
+
+.modal-content .element {
+    position: relative;
+    left: 0;
+}
+
+.modal-content .founded_elements {
+    position: relative;
+    left: 0;
+}
+
+.modal-content .element.show_profile_data {
+    position: relative;
+    left: -100%;
+    transition: all 0.3s ease;
+}
+
+.modal-content .founded_elements.show_profile_data {
+    position: relative;
+    left: -100%;
+    transition: all 0.3s ease;
+}

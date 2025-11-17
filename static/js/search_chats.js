@@ -19,7 +19,7 @@ function initSearchChats() {
         
         data.results.forEach(chat => {
             const chatElement = `
-                <div class="founded_element btn">
+                <div class="founded_element btn" onclick="showProfileData(${chat.user_id})">
                     <div class="avatar_container">
                         ${chat.avatar ? 
                             `<img src="${chat.avatar}" class="talker">` : 
