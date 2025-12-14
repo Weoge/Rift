@@ -17,6 +17,7 @@
 </head>
 <body{% if first_login %} class="avatar-upload"{% endif %}>
     <div class="blur"></div>
+    <div class="fullscreen_image_view" onclick="off_blur(); closeImage();"></div>
     <div class="modal bg">
         <div class="modal_up">
             <button class="small" onclick="closeModal(); off_blur()">
@@ -66,6 +67,7 @@
     <script src="{% static 'js/hotkeys.js' %}"></script>
     <script src="{% static 'js/notifications.js' %}"></script>
     <script src="{% static 'js/message_tracker.js' %}"></script>
+    <script src="{% static 'js/chats_tracker.js' %}"></script>
     <script>
         let settings_categories = document.querySelectorAll(".category");
         settings_categories[3].addEventListener("click", function() {

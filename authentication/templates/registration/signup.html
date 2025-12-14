@@ -3,21 +3,41 @@
 {% block title %}Создание аккаунта Rift{% endblock %}
 {% block css_extra %}
     <link rel="stylesheet" href="{% static 'css/auth.css' %}">
-    <link rel="stylesheet" href="{% static 'css/assistant.css' %}">
+    <link rel="stylesheet" href="{% static 'css/chats.css' %}">
 {% endblock %}
 {% block content %}
     <div class="bg">
         <h2>Регистрация</h2>
-        <form method="post">
+        <form class="signup_form" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {% for field in form %}
-                <div class="element">
-                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                    {{ field }}
+                {% if 'avatar_image' in field.name %}
+                    <label for="{{ field.id_for_label }}" class="avatar-upload-container">
+                        <div class="avatar_container_big" id="avatar-preview" style="margin: 10px;">
+                            <img src="{% static 'images/user.png' %}" class="talker" id="avatar-img">
+                            <div class="avatar-overlay">
+                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M17 8L12 3L7 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M12 3V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span>Выбрать аватар</span>
+                            </div>
+                        </div>
+                        {{ field }}
+                    </label>
                     {% if field.errors %}
-                        <div>{{ field.errors }}</div>
+                        <div class="error">{{ field.errors }}</div>
                     {% endif %}
-                </div>
+                {% else %}
+                    <div class="element">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <div>{{ field.errors }}</div>
+                        {% endif %}
+                    </div>
+                {% endif %}
             {% endfor %}
             <div class="agree">
                 <input id="agree" type="checkbox" required>
@@ -35,4 +55,21 @@
             </div>
         </form>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const avatarInput = document.querySelector('input[type="file"]');
+            if (avatarInput) {
+                avatarInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            document.getElementById('avatar-img').src = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        });
+    </script>
 {% endblock %}

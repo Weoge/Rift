@@ -4,33 +4,15 @@ from django.db import models
 from django.http import JsonResponse
 from properties.forms import *
 from properties.models import Avatar
-from chats.models import Chat, Messege
+from chats.models import Chat, Messege, MessageImage
 from authentication.models import User
 import json
-from secrets import token_hex
+from chats.functions.message_hashator import encrypt_message_for_chat, decrypt_message_from_chat
+from chats.functions.key_exchange import generate_keypair
+from chats.functions.crypto_storage import save_user_keys
 
 @login_required(login_url='/auth/login/')
 def chats(request):
-    if request.method == 'POST':
-        form = UploadAvatarForm(request.POST, request.FILES)
-        if form.is_valid():
-            avatar, created = Avatar.objects.get_or_create(user=request.user)
-            avatar.image = form.cleaned_data['image']
-            avatar_file_name = token_hex(16) + '.png'
-            avatar.image.name = avatar_file_name
-            avatar.save()
-            return redirect('chats:chats')
-        return render(request, 'chats.html', {'first_login': True, 'avatar_form': form})
-    
-    try:
-        request.user.avatar
-        has_avatar = True
-    except Avatar.DoesNotExist:
-        has_avatar = False
-    
-    if not has_avatar:
-        return render(request, 'chats.html', {'first_login': True, 'avatar_form': UploadAvatarForm()})
-    
     user_chats = Chat.objects.filter(
         models.Q(first_user=request.user) | models.Q(second_user=request.user)
     )
@@ -43,11 +25,18 @@ def chats(request):
         except:
             talker_avatar = None
         last_message = chat.messege_set.order_by('-create_time').first()
+        last_message = chat.messege_set.order_by('-create_time').first()
+        last_msg_text = "Нет сообщений"
+        if last_message:
+            try:
+                last_msg_text = decrypt_message_from_chat(last_message.text, chat, request.user)
+            except:
+                last_msg_text = last_message.text
         chat_data.append({
             'chat': chat,
             'talker': talker,
             'talker_avatar': talker_avatar,
-            'last_message': last_message
+            'last_message': last_msg_text
         })
     
     selected_chat_id = request.GET.get('chat_id')
@@ -56,11 +45,18 @@ def chats(request):
         try:
             selected_chat = Chat.objects.get(id=selected_chat_id)
             if (selected_chat.first_user == request.user or selected_chat.second_user == request.user):
-                messages = selected_chat.messege_set.order_by('create_time')
+                raw_messages = selected_chat.messege_set.order_by('create_time')
+                messages = []
+                for msg in raw_messages:
+                    try:
+                        msg.decrypted_text = decrypt_message_from_chat(msg.text, selected_chat, request.user)
+                    except:
+                        msg.decrypted_text = msg.text
+                    messages.append(msg)
         except Chat.DoesNotExist:
             pass
     
-    user_avatar = Avatar.objects.get(user=request.user).image.url
+    user_avatar = Avatar.objects.get(user=request.user).image.url if hasattr(request.user, 'avatar') else None
 
     searchHtml = """
         <div class="element">
@@ -80,7 +76,6 @@ def chats(request):
     ]
 
     return render(request, 'chats.html', {
-        'first_login': False, 
         'chats': chat_data, 
         'messages': messages,
         'selected_chat_id': selected_chat_id,
@@ -99,14 +94,22 @@ def get_chat_messages(request, chat_id):
         messages = chat.messege_set.order_by('create_time')
         messages_data = []
         for message in messages:
+            try:
+                decrypted_text = decrypt_message_from_chat(message.text, chat, request.user)
+            except:
+                decrypted_text = message.text
+            
+            images = [img.image.url for img in message.messageimage_set.all()]
+            
             messages_data.append({
-                'text': message.text,
+                'text': decrypted_text,
                 'sender': message.sender.username,
                 'sender_id': message.sender.id,
-                'sender_avatar': message.sender.avatar.image.url if message.sender.avatar else None,
-                'user_avatar': request.user.avatar.image.url if request.user.avatar else None,
+                'sender_avatar': message.sender.avatar.image.url if hasattr(message.sender, 'avatar') else None,
+                'user_avatar': request.user.avatar.image.url if hasattr(request.user, 'avatar') else None,
                 'is_own': message.sender == request.user,
-                'time': message.create_time.strftime('%H:%M')
+                'time': message.create_time.strftime('%H:%M'),
+                'images': images
             })
         
         return JsonResponse({'messages': messages_data})
@@ -117,17 +120,29 @@ def get_chat_messages(request, chat_id):
 def send_message(request, chat_id):
     if request.method == 'POST':
         try:
-            if request.content_type == 'application/json':
-                data = json.loads(request.body)
-                text = data.get('message')
-            else:
-                text = request.POST.get('message')
-            if not text:
-                return JsonResponse({'error': 'Message is required'}, status=400)
             chat = Chat.objects.get(id=chat_id)
             if chat.first_user != request.user and chat.second_user != request.user:
                 return JsonResponse({'error': 'Access denied'}, status=403)
-            message = Messege.objects.create(chat=chat, sender=request.user, text=text)
+            
+            text = request.POST.get('message', '')
+            images = request.FILES.getlist('images')
+            
+            if not text and not images:
+                return JsonResponse({'error': 'Message or image is required'}, status=400)
+            
+            if not text:
+                text = ''
+            
+            try:
+                encrypted_text = encrypt_message_for_chat(text, chat, request.user) if text else ''
+            except:
+                encrypted_text = text
+            
+            message = Messege.objects.create(chat=chat, sender=request.user, text=encrypted_text)
+            
+            for image in images:
+                MessageImage.objects.create(message=message, image=image)
+            
             return JsonResponse({'status': 'success'})
         except Chat.DoesNotExist:
             return JsonResponse({'error': 'Chat not found'}, status=404)
@@ -167,6 +182,7 @@ def get_profile(request, user_id):
     try:
         user = User.objects.get(id=user_id)
         return JsonResponse({
+            'user_id': user_id,
             'username': user.username,
             'last_login': user.last_login.strftime('%d.%m.%Y %H:%M') if user.last_login else 'очень давно',
             'date_joined': user.date_joined.strftime('%d.%m.%Y'),
@@ -174,3 +190,53 @@ def get_profile(request, user_id):
         })
     except User.DoesNotExist:
         return JsonResponse({'error': 'User not found'}, status=404)
+
+@login_required(login_url='/auth/login/')
+def create_chat(request, user_id):
+    try:
+        if user_id == request.user.id:
+            return JsonResponse({'error': 'Cannot create chat with yourself'}, status=400)
+        second_user = User.objects.get(id=user_id)
+        existing_chat = Chat.objects.filter(
+            models.Q(first_user=request.user, second_user=second_user) |
+            models.Q(first_user=second_user, second_user=request.user)
+        ).first()
+        
+        if existing_chat:
+            return JsonResponse({'chat_id': existing_chat.id})
+        
+        new_chat = Chat.objects.create(first_user=request.user, second_user=second_user)
+        return JsonResponse({'chat_id': new_chat.id})
+    except User.DoesNotExist:
+        return JsonResponse({'error': 'User not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+@login_required(login_url='/auth/login/')
+def get_chats_list(request):
+    user_chats = Chat.objects.filter(
+        models.Q(first_user=request.user) | models.Q(second_user=request.user)
+    )
+    
+    chats_data = []
+    for chat in user_chats:
+        talker = chat.get_talker(request.user)
+        last_message = chat.messege_set.order_by('-create_time').first()
+        last_msg_text = 'Нет сообщений'
+        last_message_sender = None
+        if last_message:
+            try:
+                last_msg_text = decrypt_message_from_chat(last_message.text, chat, request.user)
+            except:
+                last_msg_text = last_message.text
+            last_message_sender = last_message.sender
+        chats_data.append({
+            'chat_id': chat.id,
+            'talker_id': talker.id,
+            'talker_username': talker.username,
+            'talker_avatar': talker.avatar.image.url if hasattr(talker, 'avatar') else None,
+            'last_message_text': last_msg_text,
+            'last_message_sender': last_message_sender.username + ":" if last_message_sender else ""
+        })
+    
+    return JsonResponse({'chats': chats_data})

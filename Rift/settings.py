@@ -31,6 +31,8 @@ INSTALLED_APPS = [
     'chats',
     'main',
     'properties',
+    'channels',
+    'calls'
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -38,7 +40,10 @@ CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:8080',
     'http://*.*.*.*:8080',
     'http://192.168.0.244:8080',
-    'http://172.25.162.36:8080'
+    'http://172.25.162.36:8080',
+    'https://*.app.github.dev',
+    'https://*.githubpreview.dev',
+    'https://*.devtunnels.ms'
 ]
 
 MIDDLEWARE = [
@@ -144,3 +149,12 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 PASSWORD_RESET_TIMEOUT = 3600
 DEFAULT_FROM_EMAIL = 'noreply@rift-messenger.com'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('redis', 6379)],
+        },
+    },
+}

@@ -1,6 +1,7 @@
 from django.db import models
 from authentication.models import User
 from properties.models import Avatar
+from chats.functions.message_hashator import decrypt_message_from_chat
 
 class Chat(models.Model):
     first_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='first_user')
@@ -10,9 +11,18 @@ class Chat(models.Model):
     def __str__(self):
         return f"Chat between {self.first_user.username} and {self.second_user.username}"
     
-    def get_last_message_text(self):
+    def get_last_message_text(self, user):
         last_message = Messege.objects.filter(chat=self).order_by('-create_time').first()
-        return last_message.text if last_message else 'Нет сообщений'
+        if not last_message:
+            return 'Нет сообщений'
+        try:
+            decrypted = decrypt_message_from_chat(last_message.text, self, user)
+            return decrypted if decrypted else last_message.text
+        except Exception as e:
+            print(f"Ошибка расшифровки: {e}")
+            return last_message.text
+
+
     
     def get_last_message_sender(self):
         last_message = Messege.objects.filter(chat=self).order_by('-create_time').first()
@@ -40,7 +50,6 @@ class Messege(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField()
     create_time = models.DateTimeField(auto_now_add=True)
-    message_type = models.CharField(max_length=100, default='text')
 
     def __str__(self):
         return f"Message from {self.sender.username} in chat {self.chat.id}"
@@ -48,3 +57,14 @@ class Messege(models.Model):
     class Meta:
         verbose_name = 'Message'
         verbose_name_plural = 'Messages'
+
+class MessageImage(models.Model):
+    message = models.ForeignKey(Messege, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='message_images/')
+
+    def __str__(self):
+        return f"Image for message {self.message.id}"
+
+    class Meta:
+        verbose_name = 'Message Image'
+        verbose_name_plural = 'Message Images'

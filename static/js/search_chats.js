@@ -22,8 +22,11 @@ function initSearchChats() {
                 <div class="founded_element btn" onclick="showProfileData(${chat.user_id})">
                     <div class="avatar_container">
                         ${chat.avatar ? 
-                            `<img src="${chat.avatar}" class="talker">` : 
-                            `<img src="/static/images/missing.png" class="talker">`
+                            `
+                            <span class="blur_loader"></span>
+                            <img src="${chat.avatar}" class="talker">
+                            ` : 
+                            `<span class="blur_loader"></span>`
                         }
                     </div>
                     <div class="chat_info">
@@ -36,7 +39,6 @@ function initSearchChats() {
     });
 }
 
-// Вызываем при загрузке страницы и при открытии модального окна
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initSearchChats);
 } else {

@@ -7,6 +7,8 @@ User = get_user_model()
 
 class UserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
+    avatar_image = forms.ImageField(required=False, label="Аватар")
+    
     class Meta(UserCreationForm.Meta):
         model = User
-        fields = ("username", "email", "password1", "password2")
+        fields = ("avatar_image", "username", "email", "password1", "password2")
