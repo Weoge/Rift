@@ -21,6 +21,7 @@ ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
     "django",
+    "95.163.227.170"
 ]
 
 # Application definition

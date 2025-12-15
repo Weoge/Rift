@@ -7,12 +7,14 @@ class VideoCall {
         this.isVideoMuted = false;
         this.currentChatId = null;
         this.isInitiator = false;
+        this.pendingCandidates = [];
         this.config = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
     }
 
     async start(chatId, isInitiator = true) {
         this.currentChatId = chatId;
         this.isInitiator = isInitiator;
+        this.pendingCandidates = [];
         document.querySelector('.video-call-overlay').classList.add('active');
         document.getElementById('callStatus').textContent = 'Подключение...';
         
@@ -69,14 +71,30 @@ class VideoCall {
             }
         } else if (data.type === 'offer') {
             await this.peerConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
+            
+            // Добавляем отложенные ICE candidates
+            for (const candidate of this.pendingCandidates) {
+                await this.peerConnection.addIceCandidate(candidate);
+            }
+            this.pendingCandidates = [];
+            
             const answer = await this.peerConnection.createAnswer();
             await this.peerConnection.setLocalDescription(answer);
             this.websocket.send(JSON.stringify({ type: 'answer', answer }));
         } else if (data.type === 'answer') {
             await this.peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
+            
+            // Добавляем отложенные ICE candidates
+            for (const candidate of this.pendingCandidates) {
+                await this.peerConnection.addIceCandidate(candidate);
+            }
+            this.pendingCandidates = [];
         } else if (data.type === 'ice_candidate') {
+            const candidate = new RTCIceCandidate(data.candidate);
             if (this.peerConnection.remoteDescription) {
-                await this.peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
+                await this.peerConnection.addIceCandidate(candidate);
+            } else {
+                this.pendingCandidates.push(candidate);
             }
         } else if (data.type === 'user_left') {
             this.end();
@@ -104,6 +122,7 @@ class VideoCall {
         if (this.peerConnection) this.peerConnection.close();
         if (this.websocket) this.websocket.close();
         
+        this.pendingCandidates = [];
         document.querySelector('.video-call-overlay').classList.remove('active');
         document.getElementById('localVideo').srcObject = null;
         document.getElementById('remoteVideo').srcObject = null;
