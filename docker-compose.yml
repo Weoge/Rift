@@ -1,4 +1,11 @@
 services:
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt
+      - ./nginx:/etc/nginx/conf.d
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do sleep 12h & wait $${!}; certbot renew --webroot -w /var/www/html; done;'"
+
   redis:
     image: redis:7-alpine
     ports:
@@ -36,17 +43,26 @@ services:
       sh -c "python manage.py migrate &&
              python manage.py collectstatic --noinput &&
              daphne -b 0.0.0.0 -p 8000 Rift.asgi:application"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
   nginx:
     image: nginx:1.21
     ports:
-      - "8080:80"
+      - "80:80"
+      - "443:443"
     volumes:
-      - static_data:/var/www/html/static
-      - media_data:/var/www/html/media
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - static_data:/Rift/staticfiles:ro
+      - media_data:/Rift/media
+      - /etc/letsencrypt:/etc/letsencrypt/
+      - ./certbot/www:/var/www/certbot
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
-      - django
+      django:
+        condition: service_healthy
 
 volumes:
   pg_data:

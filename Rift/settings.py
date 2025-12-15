@@ -13,10 +13,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-dev-key-change-in-production')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ["*"]
-
+ALLOWED_HOSTS = [
+    "riftproject.ru",
+    "www.riftproject.ru",
+    "localhost",
+    "127.0.0.1",
+    "django",
+]
 
 # Application definition
 
@@ -39,11 +44,11 @@ CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8080', 
     'http://127.0.0.1:8080',
     'http://*.*.*.*:8080',
-    'http://192.168.0.244:8080',
-    'http://172.25.162.36:8080',
-    'https://*.app.github.dev',
-    'https://*.githubpreview.dev',
-    'https://*.devtunnels.ms'
+    'http://95.163.227.170:8080',
+    'http://riftproject.ru',
+    'https://*.*.*.*:8443',
+    'https://95.163.227.170:8443',
+    'https://riftproject.ru'
 ]
 
 MIDDLEWARE = [
@@ -158,3 +163,9 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# SECURE_SSL_REDIRECT = True
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
+# APPEND_SLASH = True
