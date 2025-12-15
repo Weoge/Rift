@@ -25,9 +25,7 @@ class VideoCall {
             
             this.websocket.onopen = () => {
                 document.getElementById('callStatus').textContent = isInitiator ? 'Ожидание собеседника...' : 'Подключение к звонку...';
-                if (isInitiator) {
-                    this.createPeerConnection();
-                }
+                this.createPeerConnection();
             };
             
             this.websocket.onmessage = async (event) => {
@@ -59,29 +57,17 @@ class VideoCall {
                 }));
             }
         };
-        
-        if (this.isInitiator) {
-            this.peerConnection.createOffer().then(offer => {
-                return this.peerConnection.setLocalDescription(offer);
-            }).then(() => {
-                this.websocket.send(JSON.stringify({
-                    type: 'offer',
-                    offer: this.peerConnection.localDescription
-                }));
-            });
-        }
     }
 
     async handleSignal(data) {
         if (data.type === 'user_joined') {
             document.getElementById('callStatus').textContent = 'Собеседник присоединился...';
-            if (this.isInitiator && this.peerConnection) {
+            if (this.isInitiator) {
                 const offer = await this.peerConnection.createOffer();
                 await this.peerConnection.setLocalDescription(offer);
                 this.websocket.send(JSON.stringify({ type: 'offer', offer }));
             }
         } else if (data.type === 'offer') {
-            if (!this.peerConnection) this.createPeerConnection();
             await this.peerConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
             const answer = await this.peerConnection.createAnswer();
             await this.peerConnection.setLocalDescription(answer);
@@ -89,7 +75,9 @@ class VideoCall {
         } else if (data.type === 'answer') {
             await this.peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
         } else if (data.type === 'ice_candidate') {
-            await this.peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
+            if (this.peerConnection.remoteDescription) {
+                await this.peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
+            }
         } else if (data.type === 'user_left') {
             this.end();
         }
