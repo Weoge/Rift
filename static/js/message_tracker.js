@@ -1,47 +1,28 @@
 let currentChatId = null;
 let lastMessageCount = 0;
-let messageCheckInterval = null;
 
 function startMessageTracking(chatId) {
     currentChatId = chatId;
     lastMessageCount = document.querySelectorAll('.message').length;
     
-    if (messageCheckInterval) {
-        clearInterval(messageCheckInterval);
-    }
-    
-    messageCheckInterval = setInterval(() => {
-        checkForNewMessages();
-    }, 2000);
+    // Теперь сообщения приходят через WebSocket автоматически
+    // Не нужен setInterval!
 }
 
 function stopMessageTracking() {
-    if (messageCheckInterval) {
-        clearInterval(messageCheckInterval);
-        messageCheckInterval = null;
-    }
     currentChatId = null;
     lastMessageCount = 0;
 }
 
-function checkForNewMessages() {
-    if (!currentChatId) return;
+// Эта функция вызывается из chats_tracker.js когда приходит новое сообщение
+function handleNewMessageInCurrentChat(message) {
+    if (!currentChatId || message.chat_id !== currentChatId) return;
     
-    fetch(`/app/messages/${currentChatId}/`)
-    .then(response => response.json())
-    .then(data => {
-        if (data.messages && data.messages.length > lastMessageCount) {
-            const newMessages = data.messages.slice(lastMessageCount);
-            newMessages.forEach(message => {
-                if (!message.is_own) {
-                    showNotification(message.sender, message.text, {"icon": message.sender_avatar});
-                    addNewMessageToChat(message);
-                }
-            });
-            lastMessageCount = data.messages.length;
-        }
-    })
-    .catch(error => console.error('Error checking messages:', error));
+    if (!message.is_own) {
+        showNotification(message.sender, message.text, {"icon": message.sender_avatar});
+        addNewMessageToChat(message);
+    }
+    lastMessageCount++;
 }
 
 function addNewMessageToChat(message) {

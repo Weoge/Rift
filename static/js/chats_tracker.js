@@ -1,15 +1,61 @@
 let currentChats = [];
+let chatSocket = null;
 
 function startChatsTracking() {
+    // Подключаемся к WebSocket
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    chatSocket = new WebSocket(`${protocol}//${window.location.host}/ws/chat/`);
+    
+    chatSocket.onopen = () => {
+        console.log('WebSocket подключен');
+        // Загружаем начальный список чатов
+        loadInitialChats();
+    };
+    
+    chatSocket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        
+        if (data.type === 'chat_update') {
+            updateChatsList(data.data.chats);
+        } else if (data.type === 'new_message') {
+            handleNewMessage(data.message);
+        }
+    };
+    
+    chatSocket.onclose = () => {
+        console.log('WebSocket отключен, переподключение через 3 сек...');
+        setTimeout(startChatsTracking, 3000);
+    };
+    
+    chatSocket.onerror = (error) => {
+        console.error('WebSocket ошибка:', error);
+    };
+    
+    // Heartbeat для поддержания соединения
     setInterval(() => {
-        fetch('/app/list/')
-            .then(response => response.json())
-            .then(data => {
-                updateChatsList(data.chats);
-            })
-            .catch(error => console.error('Error updating chats:', error));
-    }, 2000);
+        if (chatSocket.readyState === WebSocket.OPEN) {
+            chatSocket.send(JSON.stringify({ type: 'ping' }));
+        }
+    }, 30000);
 }
+
+function loadInitialChats() {
+    // Загружаем чаты один раз при подключении
+    fetch('/app/list/')
+        .then(response => response.json())
+        .then(data => {
+            updateChatsList(data.chats);
+        })
+        .catch(error => console.error('Error loading chats:', error));
+}
+
+function handleNewMessage(message) {
+    loadInitialChats();
+    if (typeof handleNewMessageInCurrentChat === 'function') {
+        handleNewMessageInCurrentChat(message);
+    }
+}
+
 
 function updateChatsList(chats) {
     const chatsList = document.querySelector('.chats');

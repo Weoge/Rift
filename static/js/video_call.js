@@ -22,12 +22,10 @@ class VideoCall {
             
             const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
             this.websocket = new WebSocket(`${protocol}//${window.location.host}/ws/call/chat_${chatId}/`);
-            
             this.websocket.onopen = () => {
                 document.getElementById('callStatus').textContent = 'Ожидание собеседника...';
                 this.createPeerConnection();
             };
-            
             this.websocket.onmessage = async (event) => {
                 await this.handleSignal(JSON.parse(event.data));
             };

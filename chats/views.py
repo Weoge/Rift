@@ -10,6 +10,8 @@ import json
 from chats.functions.message_hashator import encrypt_message_for_chat, decrypt_message_from_chat
 from chats.functions.key_exchange import generate_keypair
 from chats.functions.crypto_storage import save_user_keys
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 @login_required(login_url='/auth/login/')
 def chats(request):
@@ -142,6 +144,24 @@ def send_message(request, chat_id):
             
             for image in images:
                 MessageImage.objects.create(message=message, image=image)
+            
+            channel_layer = get_channel_layer()
+            talker = chat.get_talker(request.user)
+
+            async_to_sync(channel_layer.group_send)(
+                f'user_{talker.id}',
+                {
+                    'type': 'new_message',
+                    'message': {
+                        'chat_id': chat.id,
+                        'text': text,
+                        'sender': request.user.username,
+                        'sender_avatar': request.user.avatar.image.url if hasattr(request.user, 'avatar') else None,
+                        'is_own': False,
+                        'time': message.create_time.strftime('%H:%M')
+                    }
+                }
+            )
             
             return JsonResponse({'status': 'success'})
         except Chat.DoesNotExist:

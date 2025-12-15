@@ -283,7 +283,7 @@
     font-size: 18px;
     border-radius: 25px;
     margin-right: 10px;
-    width: calc(100% - 170px);
+    width: calc(100% - 110px);
 }
 
 .send_message_input:focus {
@@ -469,4 +469,16 @@
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1001;
+}
+
+.context_menu {
+    display: none;
+}
+
+.context_menu.active {
+    position: fixed;
+    min-width: 150px;
+    min-height: 200px;
+    display: block;
+    z-index: 2000;
 }
