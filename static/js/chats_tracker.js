@@ -19,6 +19,8 @@ function startChatsTracking() {
             updateChatsList(data.data.chats);
         } else if (data.type === 'new_message') {
             handleNewMessage(data.message);
+        } else if (data.type === 'incoming_call') {
+            handleIncomingCall(data.caller, data.chat_id);
         }
     };
     
@@ -56,6 +58,25 @@ function handleNewMessage(message) {
     }
 }
 
+function handleIncomingCall(caller, chatId) {
+    if (Notification.permission === 'granted') {
+        const notification = new Notification(`Входящий звонок от ${caller}`, {
+            body: 'Нажмите, чтобы ответить',
+            icon: '/static/images/icon.png',
+            requireInteraction: true
+        });
+        
+        notification.onclick = () => {
+            window.focus();
+            answerCall(chatId);
+            notification.close();
+        };
+    }
+    
+    if (confirm(`Входящий звонок от ${caller}. Ответить?`)) {
+        answerCall(chatId);
+    }
+}
 
 function updateChatsList(chats) {
     const chatsList = document.querySelector('.chats');
@@ -93,4 +114,9 @@ function updateChatsList(chats) {
             </div>
         `;
     }).join('');
+}
+
+// Запросить разрешение на уведомления при загрузке
+if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
 }

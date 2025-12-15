@@ -10,9 +10,9 @@ class VideoCall {
         this.config = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
     }
 
-    async start(chatId) {
+    async start(chatId, isInitiator = true) {
         this.currentChatId = chatId;
-        this.isInitiator = true;
+        this.isInitiator = isInitiator;
         document.querySelector('.video-call-overlay').classList.add('active');
         document.getElementById('callStatus').textContent = 'Подключение...';
         
@@ -22,10 +22,14 @@ class VideoCall {
             
             const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
             this.websocket = new WebSocket(`${protocol}//${window.location.host}/ws/call/chat_${chatId}/`);
+            
             this.websocket.onopen = () => {
-                document.getElementById('callStatus').textContent = 'Ожидание собеседника...';
-                this.createPeerConnection();
+                document.getElementById('callStatus').textContent = isInitiator ? 'Ожидание собеседника...' : 'Подключение к звонку...';
+                if (isInitiator) {
+                    this.createPeerConnection();
+                }
             };
+            
             this.websocket.onmessage = async (event) => {
                 await this.handleSignal(JSON.parse(event.data));
             };
@@ -56,20 +60,25 @@ class VideoCall {
             }
         };
         
-        this.peerConnection.createOffer().then(offer => {
-            return this.peerConnection.setLocalDescription(offer);
-        }).then(() => {
-            this.websocket.send(JSON.stringify({
-                type: 'offer',
-                offer: this.peerConnection.localDescription
-            }));
-        });
+        if (this.isInitiator) {
+            this.peerConnection.createOffer().then(offer => {
+                return this.peerConnection.setLocalDescription(offer);
+            }).then(() => {
+                this.websocket.send(JSON.stringify({
+                    type: 'offer',
+                    offer: this.peerConnection.localDescription
+                }));
+            });
+        }
     }
 
     async handleSignal(data) {
         if (data.type === 'user_joined') {
+            document.getElementById('callStatus').textContent = 'Собеседник присоединился...';
             if (this.isInitiator && this.peerConnection) {
-                document.getElementById('callStatus').textContent = 'Собеседник присоединился...';
+                const offer = await this.peerConnection.createOffer();
+                await this.peerConnection.setLocalDescription(offer);
+                this.websocket.send(JSON.stringify({ type: 'offer', offer }));
             }
         } else if (data.type === 'offer') {
             if (!this.peerConnection) this.createPeerConnection();
@@ -118,6 +127,16 @@ const videoCall = new VideoCall();
 function startVideoCall() {
     const chatId = document.querySelector('.chat.selected')?.dataset.chatId;
     if (chatId) {
-        videoCall.start(chatId);
+        fetch(`/app/call/${chatId}/initiate/`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    videoCall.start(chatId, true);
+                }
+            });
     }
+}
+
+function answerCall(chatId) {
+    videoCall.start(chatId, false);
 }

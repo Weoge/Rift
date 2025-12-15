@@ -260,3 +260,26 @@ def get_chats_list(request):
         })
     
     return JsonResponse({'chats': chats_data})
+
+@login_required(login_url='/auth/login/')
+def initiate_call(request, chat_id):
+    try:
+        chat = Chat.objects.get(id=chat_id)
+        if chat.first_user != request.user and chat.second_user != request.user:
+            return JsonResponse({'error': 'Access denied'}, status=403)
+        
+        talker = chat.get_talker(request.user)
+        channel_layer = get_channel_layer()
+        
+        async_to_sync(channel_layer.group_send)(
+            f'user_{talker.id}',
+            {
+                'type': 'incoming_call',
+                'caller': request.user.username,
+                'chat_id': chat_id
+            }
+        )
+        
+        return JsonResponse({'status': 'success'})
+    except Chat.DoesNotExist:
+        return JsonResponse({'error': 'Chat not found'}, status=404)
