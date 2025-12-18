@@ -1,4 +1,10 @@
 services:
+  coturn:
+    image: coturn/coturn:latest
+    network_mode: host
+    volumes:
+      - ./coturn/turnserver.conf:/etc/coturn/turnserver.conf
+    command: -c /etc/coturn/turnserver.conf
   certbot:
     image: certbot/certbot
     volumes:
