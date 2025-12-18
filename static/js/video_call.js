@@ -8,7 +8,23 @@ class VideoCall {
         this.currentChatId = null;
         this.isInitiator = false;
         this.pendingCandidates = [];
-        this.config = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
+        this.config = { 
+            iceServers: [
+                { urls: 'stun:stun.l.google.com:19302' },
+                { urls: 'stun:stun1.l.google.com:19302' },
+                { 
+                    urls: 'turn:openrelay.metered.ca:80',
+                    username: 'openrelayproject',
+                    credential: 'openrelayproject'
+                },
+                { 
+                    urls: 'turn:openrelay.metered.ca:443',
+                    username: 'openrelayproject',
+                    credential: 'openrelayproject'
+                }
+            ],
+            iceCandidatePoolSize: 10
+        };
     }
 
     async start(chatId, isInitiator = true) {
@@ -42,17 +58,28 @@ class VideoCall {
     createPeerConnection() {
         this.peerConnection = new RTCPeerConnection(this.config);
         
+        this.peerConnection.onconnectionstatechange = () => {
+            console.log('Connection state:', this.peerConnection.connectionState);
+            document.getElementById('callStatus').textContent = `Состояние: ${this.peerConnection.connectionState}`;
+        };
+        
+        this.peerConnection.oniceconnectionstatechange = () => {
+            console.log('ICE connection state:', this.peerConnection.iceConnectionState);
+        };
+        
         this.localStream.getTracks().forEach(track => {
             this.peerConnection.addTrack(track, this.localStream);
         });
         
         this.peerConnection.ontrack = (event) => {
+            console.log('Remote track received:', event.streams[0]);
             document.getElementById('remoteVideo').srcObject = event.streams[0];
             document.getElementById('callStatus').textContent = 'Подключено';
         };
         
         this.peerConnection.onicecandidate = (event) => {
             if (event.candidate) {
+                console.log('ICE candidate:', event.candidate.type);
                 this.websocket.send(JSON.stringify({
                     type: 'ice_candidate',
                     candidate: event.candidate
@@ -72,7 +99,6 @@ class VideoCall {
         } else if (data.type === 'offer') {
             await this.peerConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
             
-            // Добавляем отложенные ICE candidates
             for (const candidate of this.pendingCandidates) {
                 await this.peerConnection.addIceCandidate(candidate);
             }
@@ -84,7 +110,6 @@ class VideoCall {
         } else if (data.type === 'answer') {
             await this.peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
             
-            // Добавляем отложенные ICE candidates
             for (const candidate of this.pendingCandidates) {
                 await this.peerConnection.addIceCandidate(candidate);
             }
