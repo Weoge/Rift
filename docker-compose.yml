@@ -1,16 +1,4 @@
 services:
-  coturn:
-    image: coturn/coturn:latest
-    restart: always
-    ports:
-      - "3478:3478/tcp"
-      - "3478:3478/udp"
-      - "5349:5349/tcp"
-      - "5349:5349/udp"
-      - "49152-65535:49152-65535/udp"
-    volumes:
-      - ./coturn/turnserver.conf:/etc/coturn/turnserver.conf
-    command: -c /etc/coturn/turnserver.conf
   certbot:
     image: certbot/certbot
     volumes:

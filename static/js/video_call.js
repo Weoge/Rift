@@ -11,15 +11,16 @@ class VideoCall {
         this.config = { 
             iceServers: [
                 { urls: 'stun:stun.l.google.com:19302' },
-                { 
-                    urls: 'turn:95.163.227.170:3478',
-                    username: 'riftuser',
-                    credential: 'riftpass123'
+                { urls: 'stun:stun1.l.google.com:19302' },
+                {
+                    urls: 'turn:global.relay.metered.ca:80',
+                    username: 'e46a4e8f0d3fadc71c4f6b54',
+                    credential: 'tXDeMVIlP8vj+jkF'
                 },
-                { 
-                    urls: 'turn:95.163.227.170:3478?transport=tcp',
-                    username: 'riftuser',
-                    credential: 'riftpass123'
+                {
+                    urls: 'turn:global.relay.metered.ca:443',
+                    username: 'e46a4e8f0d3fadc71c4f6b54',
+                    credential: 'tXDeMVIlP8vj+jkF'
                 }
             ],
             iceCandidatePoolSize: 10
