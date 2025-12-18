@@ -27,7 +27,8 @@ class VideoCall {
         };
     }
 
-    async start(chatId, isInitiator = true) {
+    async start(chatId, isInitiator) {
+        if (isInitiator === undefined) isInitiator = true;
         this.currentChatId = chatId;
         this.isInitiator = isInitiator;
         this.pendingCandidates = [];
@@ -39,15 +40,27 @@ class VideoCall {
             document.getElementById('localVideo').srcObject = this.localStream;
             
             const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-            this.websocket = new WebSocket(`${protocol}//${window.location.host}/ws/call/chat_${chatId}/`);
+            const wsUrl = protocol + '//' + window.location.host + '/ws/call/chat_' + chatId + '/';
+            this.websocket = new WebSocket(wsUrl);
             
-            this.websocket.onopen = () => {
-                document.getElementById('callStatus').textContent = isInitiator ? 'Ожидание собеседника...' : 'Подключение к звонку...';
-                this.createPeerConnection();
+            const self = this;
+            this.websocket.onopen = function() {
+                console.log('WebSocket opened');
+                const status = isInitiator ? 'Ожидание собеседника...' : 'Подключение к звонку...';
+                document.getElementById('callStatus').textContent = status;
+                self.createPeerConnection();
             };
             
-            this.websocket.onmessage = async (event) => {
-                await this.handleSignal(JSON.parse(event.data));
+            this.websocket.onmessage = async function(event) {
+                await self.handleSignal(JSON.parse(event.data));
+            };
+            
+            this.websocket.onerror = function(error) {
+                console.error('WebSocket error:', error);
+            };
+            
+            this.websocket.onclose = function() {
+                console.log('WebSocket closed');
             };
         } catch (error) {
             console.error('Ошибка:', error);
@@ -56,31 +69,45 @@ class VideoCall {
     }
 
     createPeerConnection() {
+        if (this.peerConnection) {
+            this.peerConnection.close();
+        }
+        
         this.peerConnection = new RTCPeerConnection(this.config);
         
-        this.peerConnection.onconnectionstatechange = () => {
-            console.log('Connection state:', this.peerConnection.connectionState);
-            document.getElementById('callStatus').textContent = `Состояние: ${this.peerConnection.connectionState}`;
+        const self = this;
+        this.peerConnection.onconnectionstatechange = function() {
+            console.log('Connection state:', self.peerConnection.connectionState);
+            if (self.peerConnection.connectionState === 'connected') {
+                document.getElementById('callStatus').textContent = 'Подключено';
+            } else if (self.peerConnection.connectionState === 'failed') {
+                document.getElementById('callStatus').textContent = 'Ошибка соединения';
+            }
         };
         
-        this.peerConnection.oniceconnectionstatechange = () => {
-            console.log('ICE connection state:', this.peerConnection.iceConnectionState);
+        this.peerConnection.oniceconnectionstatechange = function() {
+            console.log('ICE connection state:', self.peerConnection.iceConnectionState);
         };
         
-        this.localStream.getTracks().forEach(track => {
-            this.peerConnection.addTrack(track, this.localStream);
+        this.peerConnection.onicegatheringstatechange = function() {
+            console.log('ICE gathering state:', self.peerConnection.iceGatheringState);
+        };
+        
+        this.localStream.getTracks().forEach(function(track) {
+            console.log('Adding local track:', track.kind);
+            self.peerConnection.addTrack(track, self.localStream);
         });
         
-        this.peerConnection.ontrack = (event) => {
-            console.log('Remote track received:', event.streams[0]);
+        this.peerConnection.ontrack = function(event) {
+            console.log('Remote track received:', event.track.kind);
             document.getElementById('remoteVideo').srcObject = event.streams[0];
             document.getElementById('callStatus').textContent = 'Подключено';
         };
         
-        this.peerConnection.onicecandidate = (event) => {
+        this.peerConnection.onicecandidate = function(event) {
             if (event.candidate) {
-                console.log('ICE candidate:', event.candidate.type);
-                this.websocket.send(JSON.stringify({
+                console.log('Sending ICE candidate:', event.candidate.type);
+                self.websocket.send(JSON.stringify({
                     type: 'ice_candidate',
                     candidate: event.candidate
                 }));
@@ -89,32 +116,40 @@ class VideoCall {
     }
 
     async handleSignal(data) {
+        console.log('Received signal:', data.type);
+        
         if (data.type === 'user_joined') {
             document.getElementById('callStatus').textContent = 'Собеседник присоединился...';
             if (this.isInitiator) {
+                console.log('Creating offer...');
                 const offer = await this.peerConnection.createOffer();
                 await this.peerConnection.setLocalDescription(offer);
-                this.websocket.send(JSON.stringify({ type: 'offer', offer }));
+                console.log('Sending offer');
+                this.websocket.send(JSON.stringify({ type: 'offer', offer: offer }));
             }
         } else if (data.type === 'offer') {
+            console.log('Received offer, creating answer...');
             await this.peerConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
             
-            for (const candidate of this.pendingCandidates) {
-                await this.peerConnection.addIceCandidate(candidate);
+            for (let i = 0; i < this.pendingCandidates.length; i++) {
+                await this.peerConnection.addIceCandidate(this.pendingCandidates[i]);
             }
             this.pendingCandidates = [];
             
             const answer = await this.peerConnection.createAnswer();
             await this.peerConnection.setLocalDescription(answer);
-            this.websocket.send(JSON.stringify({ type: 'answer', answer }));
+            console.log('Sending answer');
+            this.websocket.send(JSON.stringify({ type: 'answer', answer: answer }));
         } else if (data.type === 'answer') {
+            console.log('Received answer');
             await this.peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
             
-            for (const candidate of this.pendingCandidates) {
-                await this.peerConnection.addIceCandidate(candidate);
+            for (let i = 0; i < this.pendingCandidates.length; i++) {
+                await this.peerConnection.addIceCandidate(this.pendingCandidates[i]);
             }
             this.pendingCandidates = [];
         } else if (data.type === 'ice_candidate') {
+            console.log('Received ICE candidate');
             const candidate = new RTCIceCandidate(data.candidate);
             if (this.peerConnection.remoteDescription) {
                 await this.peerConnection.addIceCandidate(candidate);
@@ -142,7 +177,10 @@ class VideoCall {
 
     end() {
         if (this.localStream) {
-            this.localStream.getTracks().forEach(track => track.stop());
+            const tracks = this.localStream.getTracks();
+            for (let i = 0; i < tracks.length; i++) {
+                tracks[i].stop();
+            }
         }
         if (this.peerConnection) this.peerConnection.close();
         if (this.websocket) this.websocket.close();
@@ -157,11 +195,12 @@ class VideoCall {
 const videoCall = new VideoCall();
 
 function startVideoCall() {
-    const chatId = document.querySelector('.chat.selected')?.dataset.chatId;
-    if (chatId) {
-        fetch(`/app/call/${chatId}/initiate/`)
-            .then(response => response.json())
-            .then(data => {
+    const selectedChat = document.querySelector('.chat.selected');
+    if (selectedChat) {
+        const chatId = selectedChat.dataset.chatId;
+        fetch('/app/call/' + chatId + '/initiate/')
+            .then(function(response) { return response.json(); })
+            .then(function(data) {
                 if (data.status === 'success') {
                     videoCall.start(chatId, true);
                 }
