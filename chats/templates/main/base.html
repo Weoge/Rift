@@ -76,5 +76,12 @@
             window.location.href = "{% url 'authentication:logout' %}";
         });
     </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/static/service_worker.js')
+            .then(reg => console.log('SW registered'))
+            .catch(err => console.log('SW error:', err));
+        }
+    </script>
 </body>
 </html>
