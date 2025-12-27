@@ -26,6 +26,8 @@ function showCustomModal(title, modalContent) {
 
 function showProfile(user_id) {
     const modal_up = document.querySelector(".modal_up");
+    const context_menu = document.querySelector(".context_menu");
+    context_menu.classList.toggle("active")
     let modal_up_new = `
         <button class="small" onclick="closeModal(); off_blur()">
             <svg class="icon" width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>

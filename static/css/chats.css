@@ -473,12 +473,42 @@
 
 .context_menu {
     display: none;
+    transition: none !important;
 }
 
 .context_menu.active {
     position: fixed;
     min-width: 150px;
-    min-height: 200px;
+    height: auto;
     display: block;
     z-index: 2000;
+    transition: none !important;
+    padding: 10px 5px;
+}
+
+.context_menu .btn {
+    margin-block: 5px;
+    padding: 5px 10px;
+}
+
+@keyframes showTop {
+    0% {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 100%;
+    }
+}
+
+@keyframes showBottom {
+    0% {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 100%;
+    }
 }

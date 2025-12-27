@@ -195,6 +195,8 @@ class VideoCall {
 const videoCall = new VideoCall();
 
 function startVideoCall() {
+    const context_menu = document.querySelector(".context_menu");
+    context_menu.classList.toggle("active")
     const selectedChat = document.querySelector('.chat.selected');
     if (selectedChat) {
         const chatId = selectedChat.dataset.chatId;
