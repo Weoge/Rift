@@ -57,3 +57,9 @@ function showContextMenu(pos, content, user_id) {
         context_menu.style.animation = `showTop 0.2s ease`
     }
 }
+
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.context_menu') && !e.target.closest('.more')) {
+        hideContextMenu();
+    }
+});
