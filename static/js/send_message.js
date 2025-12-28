@@ -46,7 +46,6 @@ function setupMessageForm(chatId, talker_username) {
                     if (data.status === 'success') {
                         messageInput.value = '';
                         if (imageInput) imageInput.value = '';
-                        loadChat(chatId, talker_username);
                     } else {
                         console.error('Error:', data.error);
                     }
