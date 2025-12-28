@@ -99,7 +99,6 @@
                         <div class="chat bg" onclick="loadChat({{ chat_data.chat.id }}, '{{ chat_data.talker.username }}', {{ chat_data.talker.id }})" data-chat-id="{{ chat_data.chat.id }}">
                             <div class="avatar_container">
                                 {% if chat_data.talker_avatar %}
-                                    <span class="blur_loader"></span>
                                     <img src="{{ chat_data.talker_avatar }}" class="talker">
                                 {% else %}
                                      <span class="blur_loader"></span>
@@ -129,7 +128,6 @@
         <div class="chat_noHover user_info">
             <div class="avatar_container">
                 {% if avatar %}
-                    <span class="blur_loader"></span>
                     <img src="{{ avatar }}" class="talker">
                 {% else %}
                     <span class="blur_loader"></span>
@@ -152,7 +150,6 @@
                 <div class="talker_avatar" style="padding: 2px;">
                     <div class="avatar_container">
                         {% if message.sender.avatar %}
-                            <span class="blur_loader"></span>
                             <img src="{{ message.sender.avatar.url }}" class="talker">
                         {% else %}
                             <span class="blur_loader"></span>
@@ -160,7 +157,7 @@
                     </div>
                 </div>
                 <div class="chat_name" style="margin-left: 10px;">
-                    <p style="position: absolute; width: 120px; height: 14px; top: 50%; transform: translateY(-50%);"><b><span class="blur_loader"></span></b></p>
+                    <p style="position: absolute; width: 120px; height: 14px; top: 50%; transform: translateY(-50%);"></p>
                 </div>
             </div>
             <div class="right">
@@ -185,7 +182,6 @@
                         {% if message.sender == user %}
                             <div class="avatar_container">
                                 {% if avatar %}
-                                    <span class="blur_loader"></span>
                                     <img src="{{ avatar }}" class="talker">
                                 {% else %}
                                     <span class="blur_loader"></span>
@@ -194,7 +190,6 @@
                         {% else %}
                             <div class="avatar_container">
                                 {% if message.sender.avatar %}
-                                    <span class="blur_loader"></span>
                                     <img src="{{ message.sender.avatar.url }}" class="talker">
                                 {% else %}
                                     <span class="blur_loader"></span>
