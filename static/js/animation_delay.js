@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () {
-    let chat = document.querySelectorAll('.chat');
-
-    let delay = 0.1
-
-    for (let i = 0; i < chat.length; i++) {
-        chat[i].style = `animation-delay: ${delay}s`;
-        delay += 0.1
-    }
+    const chats = document.querySelectorAll('.chat');
+    if (chats.length === 0) return;
+    
+    requestAnimationFrame(() => {
+        chats.forEach((chat, i) => {
+            chat.style.animationDelay = (i * 0.05) + 's';
+        });
+    });
 });

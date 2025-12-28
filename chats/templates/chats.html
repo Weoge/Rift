@@ -99,14 +99,12 @@
                         <div class="chat bg" onclick="loadChat({{ chat_data.chat.id }}, '{{ chat_data.talker.username }}', {{ chat_data.talker.id }})" data-chat-id="{{ chat_data.chat.id }}">
                             <div class="avatar_container">
                                 {% if chat_data.talker_avatar %}
-                                    <img src="{{ chat_data.talker_avatar }}" class="talker">
-                                {% else %}
-                                     <span class="blur_loader"></span>
+                                    <img src="{{ chat_data.talker_avatar }}" class="talker" loading="lazy">
                                 {% endif %}
                             </div>
                             <div class="chat_info">
-                                <p class="talker_name" style="position: relative;"><b>{% if chat_data.talker.username %} {{ chat_data.talker.username }} {% else %} <span class="blur_loader"></span> {% endif %}</b></p>
-                                <p class="last_messege" style="position: relative;"><span class="blur_loader"></span></p>
+                                <p class="talker_name"><b>{{ chat_data.talker.username }}</b></p>
+                                <p class="last_messege"></p>
                             </div>
                         </div>
                     {% endfor %}
@@ -128,9 +126,7 @@
         <div class="chat_noHover user_info">
             <div class="avatar_container">
                 {% if avatar %}
-                    <img src="{{ avatar }}" class="talker">
-                {% else %}
-                    <span class="blur_loader"></span>
+                    <img src="{{ avatar }}" class="talker" loading="lazy">
                 {% endif %}
             </div>
             <div class="user_info_extra">
@@ -157,7 +153,7 @@
                     </div>
                 </div>
                 <div class="chat_name" style="margin-left: 10px;">
-                    <p style="position: absolute; width: 120px; height: 14px; top: 50%; transform: translateY(-50%);"></p>
+                    <p></p>
                 </div>
             </div>
             <div class="right">

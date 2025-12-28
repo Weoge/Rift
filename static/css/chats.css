@@ -347,13 +347,13 @@
 .chat {
     transform: translateX(-50px);
     opacity: 0;
-    animation: show-in 0.4s ease forwards;
+    animation: show-in 0.3s ease forwards;
 }
 
 .chat.no-animation {
     animation: none;
     transform: translateX(0);
-    opacity: 100%;
+    opacity: 1;
 }
 
 

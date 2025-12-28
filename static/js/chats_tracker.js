@@ -8,7 +8,7 @@ function startChatsTracking() {
     
     chatSocket.onopen = () => {
         console.log('WebSocket подключен');
-        loadInitialChats();
+        requestAnimationFrame(() => loadInitialChats());
     };
     
     chatSocket.onmessage = (event) => {
@@ -113,6 +113,8 @@ function updateChatsList(chats) {
     }
     
     const newChatsMap = new Map(chats.map(c => [c.chat_id, c]));
+    const fragment = document.createDocumentFragment();
+    let hasChanges = false;
     
     chats.forEach(chat => {
         const cached = chatsCache.get(chat.chat_id);
@@ -122,11 +124,18 @@ function updateChatsList(chats) {
                 updateChatElement(chat);
             } else {
                 const chatEl = createChatElement(chat);
-                chatsList.appendChild(chatEl);
+                fragment.appendChild(chatEl);
+                hasChanges = true;
             }
             chatsCache.set(chat.chat_id, chat);
         }
     });
+    
+    if (hasChanges) {
+        requestAnimationFrame(() => {
+            chatsList.appendChild(fragment);
+        });
+    }
     
     chatsCache.forEach((_, chatId) => {
         if (!newChatsMap.has(chatId)) {
