@@ -181,7 +181,8 @@
 
 .chats {
     width: calc(100% + 20px);
-    overflow-y: scroll;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
     position: relative;
     left: -10px;
@@ -239,7 +240,9 @@
     margin-top: 70px;
     padding: 10px;
     height: calc(100vh - 205px);
-    overflow-y: scroll;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    will-change: scroll-position;
 }
 
 .close_chat {
@@ -343,8 +346,8 @@
 
 .chat {
     transform: translateX(-50px);
-    opacity: 0%;
-    animation: show-in 0.8s ease forwards;
+    opacity: 0;
+    animation: show-in 0.4s ease forwards;
 }
 
 .chat.no-animation {

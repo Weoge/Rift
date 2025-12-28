@@ -32,12 +32,22 @@ class VideoCall {
         this.currentChatId = chatId;
         this.isInitiator = isInitiator;
         this.pendingCandidates = [];
-        document.querySelector('.video-call-overlay').classList.add('active');
-        document.getElementById('callStatus').textContent = 'Подключение...';
+        
+        const overlay = document.querySelector('.video-call-overlay');
+        const statusEl = document.getElementById('callStatus');
+        const localVideo = document.getElementById('localVideo');
+        
+        if (!overlay || !statusEl || !localVideo) {
+            console.error('Video call elements not found');
+            return;
+        }
+        
+        overlay.classList.add('active');
+        statusEl.textContent = 'Подключение...';
         
         try {
             this.localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-            document.getElementById('localVideo').srcObject = this.localStream;
+            localVideo.srcObject = this.localStream;
             
             const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
             const wsUrl = protocol + '//' + window.location.host + '/ws/call/chat_' + chatId + '/';
@@ -64,7 +74,7 @@ class VideoCall {
             };
         } catch (error) {
             console.error('Ошибка:', error);
-            document.getElementById('callStatus').textContent = 'Ошибка доступа к камере';
+            if (statusEl) statusEl.textContent = 'Ошибка доступа к камере';
         }
     }
 

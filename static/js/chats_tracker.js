@@ -1,5 +1,6 @@
 let chatSocket = null;
 let chatsCache = new Map();
+let updateThrottle = null;
 
 function startChatsTracking() {
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -14,7 +15,7 @@ function startChatsTracking() {
         const data = JSON.parse(event.data);
         
         if (data.type === 'chat_update') {
-            updateChatsList(data.data.chats);
+            throttleUpdate(() => updateChatsList(data.data.chats));
         } else if (data.type === 'new_message') {
             handleNewMessage(data.message);
         } else if (data.type === 'incoming_call') {
@@ -30,12 +31,14 @@ function startChatsTracking() {
     chatSocket.onerror = (error) => {
         console.error('WebSocket ошибка:', error);
     };
-    
-    setInterval(() => {
-        if (chatSocket.readyState === WebSocket.OPEN) {
-            chatSocket.send(JSON.stringify({ type: 'ping' }));
-        }
-    }, 30000);
+}
+
+function throttleUpdate(fn) {
+    if (updateThrottle) return;
+    updateThrottle = setTimeout(() => {
+        fn();
+        updateThrottle = null;
+    }, 100);
 }
 
 function loadInitialChats() {
