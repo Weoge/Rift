@@ -5,8 +5,12 @@ function loadChat(chatId, talker_username, talker_id) {
     });
     
     const selectedChat = document.querySelector(`[data-chat-id="${chatId}"]`);
+    const chatsMenu = document.querySelector('.chats_menu');
     selectedChat.classList.add('active');
     selectedChat.classList.add('selected');
+    if (screen.width < 828) {
+        chatsMenu.classList.add('none');
+    }
     document.querySelector('.chat_content').classList.add('active');
     
     const chatContent = document.querySelector('.chat_content');
@@ -131,4 +135,5 @@ function close_chat() {
         chat.classList.remove('active');
     });
     document.querySelector('.chat_content').classList.remove('active');
+    document.querySelector('.chats_menu').classList.remove('none');
 }

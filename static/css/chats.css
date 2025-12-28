@@ -7,8 +7,8 @@
     align-items: start;
     padding: 10px;
     border-radius: 0 15px 15px 0;
-    transition: width 0.3s ease;
     z-index: 5;
+    transition: all 0.3s ease;
 }
 
 .chat, .chat_noHover {
@@ -149,6 +149,12 @@
 
 .chats_menu.hide {
     width: 90px;
+}
+
+.chats_menu.none {
+    position: relative;
+    transition: all 0.3s ease;
+    transform: translate(-100%);
 }
 
 .user_info {
