@@ -82,22 +82,16 @@ function loadChat(chatId, talker_username, talker_id) {
     .then(data => {
         const messagesContainer = document.querySelector('.messages');
         if (data.messages && data.messages.length > 0) {
-            if (data.messages.length > 100) {
-                messageVirtualization.init(messagesContainer, data.messages);
-            } else {
-                const fragment = document.createDocumentFragment();
-                data.messages.forEach(message => {
-                    const messageEl = createMessageElement(message);
-                    fragment.appendChild(messageEl);
-                });
-                messagesContainer.appendChild(fragment);
-            }
+            const fragment = document.createDocumentFragment();
+            data.messages.forEach(message => {
+                const messageEl = createMessageElement(message);
+                fragment.appendChild(messageEl);
+            });
+            messagesContainer.appendChild(fragment);
         } else {
             messagesContainer.innerHTML = '<p class="no_messages">Сообщений пока нет</p>';
         }
-        requestAnimationFrame(() => {
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        });
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
     })
     .catch(error => console.error('Error loading messages:', error));
 }

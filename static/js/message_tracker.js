@@ -23,8 +23,5 @@ function addNewMessageToChat(message) {
     
     const messageEl = createMessageElement(message);
     messagesContainer.appendChild(messageEl);
-    
-    requestAnimationFrame(() => {
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    });
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
