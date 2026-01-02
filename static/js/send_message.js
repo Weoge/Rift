@@ -44,6 +44,9 @@ function setupMessageForm(chatId, talker_username) {
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === 'success') {
+                        if (data.message && typeof addNewMessageToChat === 'function') {
+                            addNewMessageToChat(data.message);
+                        }
                         messageInput.value = '';
                         if (imageInput) imageInput.value = '';
                     } else {

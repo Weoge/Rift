@@ -6,10 +6,7 @@ from properties.forms import *
 from properties.models import Avatar
 from chats.models import Chat, Messege, MessageImage
 from authentication.models import User
-import json
 from chats.functions.message_hashator import encrypt_message_for_chat, decrypt_message_from_chat
-from chats.functions.key_exchange import generate_keypair
-from chats.functions.crypto_storage import save_user_keys
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
@@ -145,6 +142,8 @@ def send_message(request, chat_id):
             for image in images:
                 MessageImage.objects.create(message=message, image=image)
             
+            message_images = [img.image.url for img in message.messageimage_set.all()]
+            
             channel_layer = get_channel_layer()
             talker = chat.get_talker(request.user)
 
@@ -158,12 +157,23 @@ def send_message(request, chat_id):
                         'sender': request.user.username,
                         'sender_avatar': request.user.avatar.image.url if hasattr(request.user, 'avatar') else None,
                         'is_own': False,
-                        'time': message.create_time.strftime('%H:%M')
+                        'time': message.create_time.strftime('%H:%M'),
+                        'images': message_images
                     }
                 }
             )
             
-            return JsonResponse({'status': 'success'})
+            return JsonResponse({
+                'status': 'success',
+                'message': {
+                    'text': text,
+                    'sender': request.user.username,
+                    'sender_avatar': request.user.avatar.image.url if hasattr(request.user, 'avatar') else None,
+                    'is_own': True,
+                    'time': message.create_time.strftime('%H:%M'),
+                    'images': message_images
+                }
+            })
         except Chat.DoesNotExist:
             return JsonResponse({'error': 'Chat not found'}, status=404)
         except Exception as e:

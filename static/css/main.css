@@ -225,3 +225,46 @@ a {
     color: #fff;
     margin: 0 0 5px 5px;
 }
+
+.notification {
+    transform: translate(calc(100% + 10px));
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    width: 300px;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    transition: all 0.5s ease;
+}
+
+.notification.show {
+    display: block;
+    transform: translate(0);
+    transition: all 0.5s ease;
+}
+
+.notification_content {
+    margin-left: 10px;
+}
+
+.notification_deco {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 3px;
+    box-shadow: 0 10px 20px rgba(123, 233, 164, 0.3);
+    background-color: rgb(123, 233, 164);
+    outline: 2px solid rgb(123, 233, 164);
+    animation: none;
+}
+
+@keyframes notice {
+    from {
+        width: 100%;
+    }
+    to {
+        width: 0;
+    }
+}

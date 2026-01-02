@@ -9,10 +9,11 @@ function stopMessageTracking() {
 }
 
 function handleNewMessageInCurrentChat(message) {
-    if (!currentChatId || message.chat_id !== currentChatId) return;
-    
     if (!message.is_own) {
-        showNotification(message.sender, message.text, {"icon": message.sender_avatar});
+        sendNotification(message.sender, message.text, message.sender_avatar);
+    }
+    
+    if (currentChatId && message.chat_id === currentChatId) {
         addNewMessageToChat(message);
     }
 }

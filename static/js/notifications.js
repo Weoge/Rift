@@ -1,123 +1,37 @@
-class NotificationManager {
-    constructor() {
-      this.isSupported = "Notification" in window;
-    }
+let notificationQueue = [];
+let notificationIdCounter = 0;
 
-    async requestPermission() {
-      if (!this.isSupported) {
-        throw new Error("Браузер не поддерживает уведомления");
-      }
-
-      if (Notification.permission === "granted") {
-        return true;
-      }
-
-      if (Notification.permission === "denied") {
-        return false;
-      }
-
-      try {
-        const permission = await Notification.requestPermission();
-        return permission === "granted";
-      } catch (error) {
-        console.error("Ошибка запроса разрешения:", error);
-        return false;
-      }
-    }
-
-    show(title, options = {}) {
-      if (!this.isSupported) {
-        console.warn("Браузер не поддерживает уведомления");
-        return null;
-      }
-
-      if (Notification.permission !== "granted") {
-        console.warn("Нет разрешения на показ уведомлений. Используйте requestPermission() по действию пользователя.");
-        return null;
-      }
-
-      const defaultOptions = {
-        body: "",
-        icon: null,
-        badge: null,
-        tag: null,
-        requireInteraction: false,
-        silent: false
-      };
-
-      const notification = new Notification(title, { ...defaultOptions, ...options });
-
-      // Автозакрытие через 5 секунд если не требует взаимодействия
-      if (!options.requireInteraction) {
-        setTimeout(() => notification.close(), 5000);
-      }
-
-      return notification;
-    }
-
-    getPermissionStatus() {
-      return Notification.permission;
-    }
-
-    isPermissionGranted() {
-      return Notification.permission === "granted";
-    }
-} 
-
-// Создаем глобальный экземпляр
-const notifications = new NotificationManager();
-window.notifications = notifications;
-
-// Экспортируем для использования
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = NotificationManager;
-}
-
-// Глобальные функции
-window.requestNotificationPermission = async function() {
-    return await notifications.requestPermission();
-};
-
-window.showNotification = function(title, body, options = {}) {
-    return notifications.show(title, { body, ...options });
-};
-
-window.showMessageNotification = function(message) {
-    return notifications.show("Новое сообщение", {
-      body: message,
-      tag: "message",
-      requireInteraction: true
-    });
-};
-
-window.showInfoNotification = function(info) {
-    return notifications.show("Информация", {
-      body: info,
-      tag: "info"
-    });
-};
-
-// Простая функция для быстрого использования
-window.enableNotifications = async function() {
-    const granted = await notifications.requestPermission();
-    if (granted) {
-        console.log("Уведомления включены!");
-        return true;
-    } else {
-        console.log("Разрешение отклонено");
-        return false;
-    }
-};
-
-// Пример использования с кнопкой
-function setupNotificationButton(buttonId) {
-    const button = document.getElementById(buttonId);
-    if (button) {
-        button.addEventListener('click', async () => {
-            const granted = await requestNotificationPermission();
-            if (granted) {
-                showInfoNotification("Уведомления включены!");
-            }
-        });
-    }
+function sendNotification(header, text, img) {
+    const template = document.querySelector('.notification');
+    const clone = template.cloneNode(true);
+    const id = notificationIdCounter++;
+    const notification_header = clone.querySelector('.notification_header');
+    const notification_text = clone.querySelector('.notification_text');
+    const notification_img = clone.querySelector('.notification_img');
+    notification_header.innerText = header;
+    notification_text.innerText = text;
+    notification_img.src = img;
+    
+    clone.style.top = `${10 + notificationQueue.length * 90}px`;
+    clone.style.display = 'flex';
+    clone.style.align_items = 'center';
+    
+    const deco = clone.querySelector('.notification_deco');
+    deco.style.animation = 'notice 10s linear';
+    
+    document.body.appendChild(clone);
+    notificationQueue.push({id, element: clone});
+    
+    setTimeout(() => clone.classList.add('show'), 10);
+    
+    setTimeout(() => {
+        clone.classList.remove('show');
+        setTimeout(() => {
+            clone.remove();
+            notificationQueue = notificationQueue.filter(n => n.id !== id);
+            notificationQueue.forEach((n, i) => {
+                n.element.style.top = `${10 + i * 90}px`;
+            });
+        }, 500);
+    }, 10000);
 }
