@@ -1,55 +1,92 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
-<html lang="ru" translate="no">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Добро пожаловать в Rift messenger!</title>
+    <title>{% trans "Добро пожаловать в Rift messenger!" %}</title>
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
     <link rel="stylesheet" href="{% static 'css/modal.css' %}">
     <link rel="stylesheet" href="{% static 'css/blur.css' %}">
     <link rel="stylesheet" href="{% static 'css/auth.css' %}">
     <link rel="stylesheet" href="{% static 'css/background_dark.css' %}">
     <link rel="stylesheet" href="{% static 'css/landing/landing.css' %}">
+    <link rel="stylesheet" href="{% static 'css/chats.css' %}">
     <link rel="icon" href="{% static 'images/icon.png' %}">
     <link rel="manifest" href="/manifest.json">
 </head>
 <body>
     <header>
-        <div class="header-main bg">
+        <div class="header-main bg blured">
             <ul class="nav">
                 <a href="/#section-main" class="nav-select"><li class="font-bold">Rift</li></a>
-                <a href="/#section-info" class="nav-select"><li class="font">Инфо</li></a>
-                <a href="/#section-developers" class="nav-select"><li class="font">Разработчики</li></a>
+                <a href="/#section-info" class="nav-select"><li class="font">{% trans "Инфо" %}</li></a>
+                <a href="/#section-developers" class="nav-select"><li class="font">{% trans "Разработчики" %}</li></a>
                 <a href="/#section-faq" class="nav-select"><li class="font">FAQ</li></a>
-                <a href="/#section-support" class="nav-select"><li class="font">Поддержка</li></a>
+                <a href="/#section-support" class="nav-select"><li class="font">{% trans "Поддержка" %}</li></a>
                 <div class="select_bar bg" style="width: 88.3833px; left: 25px;"></div>
             </ul>
+        </div>
+        <div class="header-extra bg blured">
+            <div class="select-lang flex">
+                <div class="avatar_container lang-flag">
+                    <img src="" class="talker">
+                </div>
+                <p class="font-bold lang-name" style="font-size: 32px; margin: 0 5px 0 10px;"></p>
+            </div>
+            <div class="select-lang-btn" onclick="showContextMenu('lang', 'lang_content', '-1')">
+                <svg class="icon" width="36px" height="36px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
         </div>
     </header>
     <main>
         <div id="section-main" class="section">
-            <img src="{% static 'images/icon.png' %}" id="logo">
-            <h1 class="font-bold" id="name">Что такое <span class="font-bold gradient-green">Rift?</span></h1>
-            <p class="font" id="desc">
-                Rift — это современный, быстрый и безопасный мессенджер, разработанный на территории РФ с нуля. Он объединяет пользователей по всему миру, обеспечивая стабильную связь, конфиденциальность и удобство общения.
-            </p>
-            <p class="font" id="desc2">
-                Уникальная технология безопасности — R2HM. Rift использует собственную технологию шифрования R2HM (Request 2 Hashed Meta), которая сочетает преимущества симметричных и асимметричных алгоритмов, обеспечивая:
-            </p>
-            <p class="font-bold gradient-green" id="item1" style="text-align: center; font-size: 32px;">Абсолютную защиту личной переписки</p>
-            <p class="font-bold gradient-green" id="item2" style="text-align: center; font-size: 32px;">Ускоренное шифрование сообщений без потери производительности</p>
-            <p class="font-bold gradient-green" id="item3" style="text-align: center; font-size: 32px;">Безопасную передачу данных между устройствами и серверами</p>
-            <p class="font-bold" id="desc3">
-                Наша миссия - cоздать независимую, безопасную и удобную экосистему связи, где пользователь полностью контролирует свои данные.
-            </p>
-            <button class="btn start font-bold" onclick="showModal(); on_blur();">Начать!</button>
+            <video style="transition: none; opacity: 40%;" autoplay muted loop playsinline>
+                <source src="{% static 'videos/background.mp4' %}" type="video/mp4">
+            </video>
+            <h1 class="font-bold gradient-green" style="animation: slideUp 0.8s 0.2s ease forwards; opacity: 0; transform: translateY(50px); font-size: 72px;">Rift messenger</h1>
+            <div class="buttons">
+                <button class="btn blured start font-bold" onclick="showModal(); on_blur();">{% trans "Начать!" %}</button>
+                <button class="btn blured start font-bold" onclick="window.scrollTo({ top: document.getElementById('section-info').offsetTop, behavior: 'smooth' });">{% trans "Подробнее" %}</button>
+            </div>
+            <svg class="icon" width="72px" height="72px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 13L12 18L17 13M7 6L12 11L17 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
         <div id="section-info" class="section">
-            
+            <h1 class="font-bold gradient-green">{% trans "Почему именно Rift?" %}</h1>
+            <div class="images_carousel flex">
+                <div class="image">
+                    <img id="img1" src="{% static 'images/screenshots/1.png' %}">
+                    <label for="img1" class="font gradient-green">{% trans "Лаконичный и простой интерфейс" %}</label>
+                </div>
+                <div class="image">
+                    <img id="img2" src="{% static 'images/screenshots/2.png' %}">
+                    <label for="img2" class="font gradient-green">{% trans "Высокое качество звонков" %}</label>
+                </div>
+                <div class="image">
+                    <img id="img32" src="{% static 'images/screenshots/3.png' %}">
+                    <label for="img3" class="font gradient-green">{% trans "Регулярные обновления" %}</label>
+                </div>
+            </div>
         </div>
-        <div id="section-developers" class="section">
-            
+        <div id="section-developers" class="section" style="justify-content: center; align-items: center;">
+            <h1 class="font-bold gradient-green" style="font-size: 72px; text-align: center;">{% trans "Разработчики" %}</h1>
+                <div class="developers" style="display: flex; justify-content: center; align-items: center; width: 100%; flex-wrap: wrap;">
+                    <div class="developer flex">
+                    <div class="avatar_container_big"><img class="notification_img talker" src="{% static 'images/dev/Dmitry.jpg' %}"></div>
+                    <div class="notification_content">
+                        <p class="notification_header font-bold gradient-green">{% trans "Дмитрий Осипов" %}</p>
+                        <p class="notification_text font" style="color: #fff;">{% trans "Главный разработчик" %}</p>
+                    </div>
+                </div>
+                <div class="developer flex">
+                    <div class="avatar_container_big"><img class="notification_img talker" src="{% static 'images/dev/Nikita.jpg' %}"></div>
+                    <div class="notification_content">
+                        <p class="notification_header font-bold gradient-green">{% trans "Никита Стёпин" %}</p>
+                        <p class="notification_text font" style="color: #fff;">{% trans "Тестировщик" %}</p>
+                    </div>
+                </div>
+            </div>
         </div>
         <div id="section-faq" class="section">
             
@@ -63,7 +100,7 @@
             <button class="small" onclick="off_blur(); closeModal();">
                 <svg class="icon" width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
             </button>
-            <span class="title font-bold">Вход</span>
+            <span class="title font-bold">{% trans "Вход" %}</span>
         </div>
         <form action="{% url 'authentication:login' %}" method="post" class="login_form">
             {% csrf_token %}
@@ -79,16 +116,21 @@
             <div class="buttons">
                 <button class="btn font-bold" type="submit">
                     <svg class="icon" width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 17C6 17.93 6 18.395 6.10222 18.7765C6.37962 19.8117 7.18827 20.6204 8.22354 20.8978C8.60504 21 9.07003 21 10 21H16.2C17.8802 21 18.7202 21 19.362 20.673C19.9265 20.3854 20.3854 19.9265 20.673 19.362C21 18.7202 21 17.8802 21 16.2V7.8C21 6.11984 21 5.27976 20.673 4.63803C20.3854 4.07354 19.9265 3.6146 19.362 3.32698C18.7202 3 17.8802 3 16.2 3H10C9.07003 3 8.60504 3 8.22354 3.10222C7.18827 3.37962 6.37962 4.18827 6.10222 5.22354C6 5.60504 6 6.07003 6 7M12 8L16 12M16 12L12 16M16 12H3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    Войти
+                    {% trans "Войти" %}
                 </button>
             </div>
-            <p class="font">Нет аккаунта? <a href="{% url 'authentication:signup' %}" class="font-bold gradient-green">Зарегестрироваться</a></p>
+            <p class="font">{% trans "Нет аккаунта?" %} <a href="{% url 'authentication:signup' %}" class="font-bold gradient-green">{% trans "Зарегистрироваться" %}</a></p>
         </form>
     </div>
     <div class="blur"></div>
+    <div class="context_menu bg"></div>
     <script src="{% static 'js/nav_select.js' %}" defer></script>
     <script src="{% static 'js/modal.js' %}"></script>
     <script src="{% static 'js/blur.js' %}"></script>
     <script src="{% static 'js/hotkeys.js' %}"></script>
+    <script src="{% static 'js/parallax.js' %}"></script>
+    <script src="{% static 'js/context_menu.js' %}"></script>
+    <script src="/static/js/change_language.js"></script>
+    <script src="{% url 'javascript-catalog' %}"></script>
 </body>
 </html>

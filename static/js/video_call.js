@@ -43,7 +43,7 @@ class VideoCall {
         }
         
         overlay.classList.add('active');
-        statusEl.textContent = 'Подключение...';
+        statusEl.textContent = `${gettext("Подключение...")}`;
         
         try {
             this.localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
@@ -56,7 +56,7 @@ class VideoCall {
             const self = this;
             this.websocket.onopen = function() {
                 console.log('WebSocket opened');
-                const status = isInitiator ? 'Ожидание собеседника...' : 'Подключение к звонку...';
+                const status = isInitiator ? `${gettext("Ожидание собеседника...")}` : `${gettext("Подключение к звонку...")}`;
                 document.getElementById('callStatus').textContent = status;
                 self.createPeerConnection();
             };
@@ -74,7 +74,7 @@ class VideoCall {
             };
         } catch (error) {
             console.error('Ошибка:', error);
-            if (statusEl) statusEl.textContent = 'Ошибка доступа к камере';
+            if (statusEl) statusEl.textContent = `${gettext("Ошибка доступа к камере")}`;
         }
     }
 
@@ -89,9 +89,9 @@ class VideoCall {
         this.peerConnection.onconnectionstatechange = function() {
             console.log('Connection state:', self.peerConnection.connectionState);
             if (self.peerConnection.connectionState === 'connected') {
-                document.getElementById('callStatus').textContent = 'Подключено';
+                document.getElementById('callStatus').textContent = `${gettext("Подключено")}`;
             } else if (self.peerConnection.connectionState === 'failed') {
-                document.getElementById('callStatus').textContent = 'Ошибка соединения';
+                document.getElementById('callStatus').textContent = `${gettext("Ошибка соединения")}`;
             }
         };
         
@@ -111,7 +111,7 @@ class VideoCall {
         this.peerConnection.ontrack = function(event) {
             console.log('Remote track received:', event.track.kind);
             document.getElementById('remoteVideo').srcObject = event.streams[0];
-            document.getElementById('callStatus').textContent = 'Подключено';
+            document.getElementById('callStatus').textContent = `${gettext("Подключено")}`;
         };
         
         this.peerConnection.onicecandidate = function(event) {
@@ -129,7 +129,7 @@ class VideoCall {
         console.log('Received signal:', data.type);
         
         if (data.type === 'user_joined') {
-            document.getElementById('callStatus').textContent = 'Собеседник присоединился...';
+            document.getElementById('callStatus').textContent = `${gettext("Собеседник присоединился...")}`;
             if (this.isInitiator) {
                 console.log('Creating offer...');
                 const offer = await this.peerConnection.createOffer();

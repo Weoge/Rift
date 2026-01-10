@@ -1,13 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Создание аккаунта Rift{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Создание аккаунта Rift" %}{% endblock %}
 {% block css_extra %}
     <link rel="stylesheet" href="{% static 'css/auth.css' %}">
     <link rel="stylesheet" href="{% static 'css/chats.css' %}">
 {% endblock %}
 {% block content %}
     <div class="bg">
-        <h2>Регистрация</h2>
+        <h2>{% trans "Регистрация" %}</h2>
         <form class="signup_form" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {% for field in form %}
@@ -21,7 +22,7 @@
                                     <path d="M17 8L12 3L7 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                     <path d="M12 3V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
-                                <span>Выбрать аватар</span>
+                                <span>{% trans "Выбрать аватар" %}</span>
                             </div>
                         </div>
                         {{ field }}
@@ -39,18 +40,14 @@
                     </div>
                 {% endif %}
             {% endfor %}
-            <div class="agree">
-                <input id="agree" type="checkbox" required>
-                <label for="agree">Я принимаю <a href="#"><b>Лицензионное соглашение</b></a></label>
-            </div>
             <div class="buttons">
                 <button type="submit" class="btn">
                     <svg class="icon" width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    Зарегистрироваться
+                    {% trans "Зарегистрироваться" %}
                 </button>
                 <a href="javascript:history.back()" class="btn">
                     <svg class="icon" width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 12H4M4 12L10 18M4 12L10 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    Назад
+                    {% trans "Назад" %}
                 </a>
             </div>
         </form>

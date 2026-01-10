@@ -57,3 +57,8 @@
 .category:hover p {
     color: #000 !important;
 }
+
+.settings_category {
+    padding: 5px 10px;
+    margin: 10px;
+}

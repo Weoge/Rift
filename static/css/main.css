@@ -21,9 +21,14 @@ a {
     margin-inline: 5px;
 }
 
+.flex {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
 .small {
     outline: 2px solid rgba(90, 90, 90, 0.3);
-    /* backdrop-filter: blur(300px); */
     color: #fff;
     border: none;
     padding: 15px 30px;
@@ -58,17 +63,19 @@ a {
 .bg {
     background-color: rgba(0, 0, 0, 0.2);
     outline: 2px solid rgba(0, 0, 0, 0.3);
-    /* backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px); */
     padding: 40px;
     border-radius: 15px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
 
+.blured {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
 .btn {
     background-color: rgba(90, 90, 90, 0.2);
     outline: 2px solid rgba(90, 90, 90, 0.3);
-    /* backdrop-filter: blur(300px); */
     color: #fff;
     border: none;
     padding: 15px 30px;
@@ -134,8 +141,6 @@ a {
 .head {
     background: rgba(0, 0, 0, 0.2);
     outline: 2px solid rgba(0, 0, 0, 0.3);
-    /* backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px); */
     padding: 40px;
     border-radius: 15px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
@@ -164,7 +169,6 @@ a {
 .head button {
     background-color: rgba(90, 90, 90, 0.2);
     outline: 2px solid rgba(90, 90, 90, 0.3);
-    /* backdrop-filter: blur(300px); */
     color: white;
     border: none;
     padding: 15px 30px;
@@ -179,14 +183,6 @@ a {
     outline: 2px solid rgb(123, 233, 164);
 }
 
-#rift {
-    width: 100px;
-    position: absolute;
-    right: 18%;
-    top: 15%;
-    rotate: 13deg;
-}
-
 .gradient-green {
     background: linear-gradient(135deg, #66ea96, #1a8e4e);
     -webkit-background-clip: text;
@@ -197,7 +193,6 @@ a {
 .input {
     background-color: rgba(90, 90, 90, 0.2);
     outline: 2px solid rgba(90, 90, 90, 0.3);
-    /* backdrop-filter: blur(300px); */
     color: white;
     border: none;
     padding: 15px;
@@ -227,7 +222,7 @@ a {
 }
 
 .notification {
-    transform: translate(calc(100% + 10px));
+    transform: translate(calc(100% + 20px));
     position: fixed;
     top: 10px;
     right: 10px;
