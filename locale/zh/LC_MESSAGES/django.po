@@ -1,0 +1,150 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 11:09+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: authentication/templates/registration/login.html:4
+msgid "Авторизация"
+msgstr "授权"
+
+#: authentication/templates/registration/login.html:12
+#: main/templates/index.html:103
+msgid "Вход"
+msgstr "登录"
+
+#: authentication/templates/registration/login.html:27
+#: main/templates/index.html:119
+msgid "Войти"
+msgstr "登录"
+
+#: authentication/templates/registration/login.html:31
+#: authentication/templates/registration/signup.html:50
+msgid "Назад"
+msgstr "后退"
+
+#: authentication/templates/registration/login.html:35
+msgid "Забыли пароль?"
+msgstr "忘记密码了吗？"
+
+#: authentication/templates/registration/signup.html:4
+msgid "Создание аккаунта Rift"
+msgstr "创建 Rift 帐户"
+
+#: authentication/templates/registration/signup.html:11
+msgid "Регистрация"
+msgstr "登记"
+
+#: authentication/templates/registration/signup.html:25
+msgid "Выбрать аватар"
+msgstr "选择头像"
+
+#: authentication/templates/registration/signup.html:46
+#: main/templates/index.html:122
+msgid "Зарегистрироваться"
+msgstr "登记"
+
+#: chats/templates/chats.html:70
+msgid "Подключение..."
+msgstr "联系..."
+
+#: chats/templates/chats.html:87
+msgid "Поиск"
+msgstr "搜索"
+
+#: chats/templates/chats.html:123
+msgid "Чатов пока нет ;("
+msgstr "还没有聊天记录;("
+
+#: chats/templates/chats.html:135
+msgid "Настройки"
+msgstr "设置"
+
+#: chats/templates/chats.html:234
+msgid "Введите сообщение..."
+msgstr "输入您的留言..."
+
+#: chats/views.py:29
+msgid "Нет сообщений"
+msgstr "没有消息"
+
+#: chats/views.py:63
+msgid "Поиск:"
+msgstr "搜索："
+
+#: chats/views.py:215
+msgid "очень давно"
+msgstr "很久以前"
+
+#: main/templates/index.html:8
+msgid "Добро пожаловать в Rift messenger!"
+msgstr "欢迎使用 Rift Messenger！"
+
+#: main/templates/index.html:24
+msgid "Инфо"
+msgstr "信息"
+
+#: main/templates/index.html:25 main/templates/index.html:73
+msgid "Разработчики"
+msgstr "开发商"
+
+#: main/templates/index.html:27
+msgid "Поддержка"
+msgstr "支持"
+
+#: main/templates/index.html:50
+msgid "Начать!"
+msgstr "开始！"
+
+#: main/templates/index.html:51
+msgid "Подробнее"
+msgstr "更多详情"
+
+#: main/templates/index.html:56
+msgid "Почему именно Rift?"
+msgstr "为什么是裂谷？"
+
+#: main/templates/index.html:60
+msgid "Лаконичный и простой интерфейс"
+msgstr "简洁的界面"
+
+#: main/templates/index.html:64
+msgid "Высокое качество звонков"
+msgstr "高通话质量"
+
+#: main/templates/index.html:68
+msgid "Регулярные обновления"
+msgstr "定期更新"
+
+#: main/templates/index.html:78
+msgid "Дмитрий Осипов"
+msgstr "德米特里·奥西波夫"
+
+#: main/templates/index.html:79
+msgid "Главный разработчик"
+msgstr "首席开发人员"
+
+#: main/templates/index.html:85
+msgid "Никита Стёпин"
+msgstr "尼基塔·斯特平"
+
+#: main/templates/index.html:86
+msgid "Тестировщик"
+msgstr "测试员"
+
+#: main/templates/index.html:122
+msgid "Нет аккаунта?"
+msgstr "没有帐户？"

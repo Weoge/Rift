@@ -1,0 +1,88 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-05 13:52+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: static/js/context_menu.js:25
+msgid "Фото"
+msgstr "Foto"
+
+#: static/js/context_menu.js:31 static/js/modal.js:35 static/js/modal.js:59
+#: static/js/modal.js:76
+msgid "Профиль"
+msgstr "Profil"
+
+#: static/js/context_menu.js:35
+msgid "Аудиозвонок"
+msgstr "Audioanruf"
+
+#: static/js/context_menu.js:39
+msgid "Видеозвонок"
+msgstr "Videoanruf"
+
+#: static/js/hotkeys.js:17 static/js/modal.js:127
+msgid "Поиск"
+msgstr "Suchen"
+
+#: static/js/load_chat.js:67
+msgid "Введите сообщение..."
+msgstr "Geben Sie Ihre Nachricht ein..."
+
+#: static/js/load_chat.js:96
+msgid "Сообщений пока нет"
+msgstr "Noch keine Nachrichten"
+
+#: static/js/load_chat.js:108
+msgid "Вы"
+msgstr "Du"
+
+#: static/js/modal.js:55 static/js/modal.js:98
+msgid "Был(а)"
+msgstr "War"
+
+#: static/js/modal.js:56 static/js/modal.js:99
+msgid "Дата регистрации:"
+msgstr "Anmeldedatum:"
+
+#: static/js/video_call.js:46
+msgid "Подключение..."
+msgstr "Verbindung..."
+
+#: static/js/video_call.js:59
+msgid "Ожидание собеседника..."
+msgstr "Warten auf den Gesprächspartner..."
+
+#: static/js/video_call.js:59
+msgid "Подключение к звонку..."
+msgstr "Verbindung zu einem Anruf wird hergestellt..."
+
+#: static/js/video_call.js:77
+msgid "Ошибка доступа к камере"
+msgstr "Fehler beim Zugriff auf die Kamera"
+
+#: static/js/video_call.js:92 static/js/video_call.js:114
+msgid "Подключено"
+msgstr "Verbunden"
+
+#: static/js/video_call.js:94
+msgid "Ошибка соединения"
+msgstr "Verbindungsfehler"
+
+#: static/js/video_call.js:132
+msgid "Собеседник присоединился..."
+msgstr "Der Gesprächspartner schloss sich an..."
