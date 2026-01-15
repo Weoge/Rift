@@ -56,6 +56,59 @@
     position: relative;
 }
 
+.avatar_container_mid {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.2);
+    outline: 2px solid rgba(0, 0, 0, 0.3);
+    /* backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); */
+    overflow-x: hidden !important;
+    overflow-y: hidden !important;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.avatar-upload-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.avatar-upload-container:hover .avatar_container_mid {
+    outline-color: rgb(123, 233, 164);
+    box-shadow: 0 5px 20px rgba(123, 233, 164, 0.4);
+}
+
+.avatar-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    color: rgb(123, 233, 164);
+}
+
+.avatar-upload-container:hover .avatar-overlay {
+    opacity: 1;
+}
+
+.avatar-overlay span {
+    font-size: 12px;
+    font-weight: 600;
+}
+
 .avatar_container_small {
     width: 25px;
     height: 25px;
@@ -414,40 +467,29 @@
     align-items: center;
 }
 
-.profile_data {
+.modal_data {
+    display: block;
     position: absolute;
-    top: 95px;
-    left: 100%;
+    top: 0;
+    left: calc(100% + 40px);
     width: calc(100% - 40px);
-    height: calc(100% - 95px - 20px);
     z-index: 100;
-    transition: all 0.3s ease;
+    transition: left 0.3s ease;
 }
 
-.profile_data.show_profile_data {
-    left: 20px;
+.modal_data.show_modal_data {
+    left: calc(100% + 40px);
 }
 
-.modal-content .element {
+.modal-content {
     position: relative;
     left: 0;
+    transition: left 0.3s ease;
+    overflow-x: visible;
 }
 
-.modal-content .founded_elements {
-    position: relative;
-    left: 0;
-}
-
-.modal-content .element.show_profile_data {
-    position: relative;
-    left: -100%;
-    transition: all 0.3s ease;
-}
-
-.modal-content .founded_elements.show_profile_data {
-    position: relative;
-    left: -100%;
-    transition: all 0.3s ease;
+.modal-content.show_modal_data {
+    left: calc(-100% - 20px);
 }
 
 .message_images {

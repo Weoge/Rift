@@ -10,6 +10,9 @@ body {
     background: linear-gradient(135deg, #66ea96, #1a8e4e, #66ea96, #1a8e4e);
     background-size: 400% 400%;
     min-height: 100vh;
+}
+
+body.bg_anim {
     animation: gradientShift 8s ease infinite;
 }
 

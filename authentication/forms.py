@@ -12,3 +12,11 @@ class UserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = User
         fields = ("avatar_image", "username", "email", "password1", "password2")
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs.update({
+            'minlength': '3',
+            'maxlength': '15',
+            'pattern': '[A-Za-z0-9_]*'
+        })

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-06 14:05+0000\n"
+"POT-Creation-Date: 2026-01-15 18:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,12 +23,12 @@ msgid "Авторизация"
 msgstr "Genehmigung"
 
 #: authentication/templates/registration/login.html:12
-#: main/templates/index.html:103
+#: main/templates/index.html:102
 msgid "Вход"
 msgstr "Login"
 
 #: authentication/templates/registration/login.html:27
-#: main/templates/index.html:119
+#: main/templates/index.html:118
 msgid "Войти"
 msgstr "Login"
 
@@ -54,7 +54,7 @@ msgid "Выбрать аватар"
 msgstr "Wählen Sie einen Avatar aus"
 
 #: authentication/templates/registration/signup.html:46
-#: main/templates/index.html:122
+#: main/templates/index.html:121
 msgid "Зарегистрироваться"
 msgstr "Registrieren"
 
@@ -78,74 +78,118 @@ msgstr "Einstellungen"
 msgid "Введите сообщение..."
 msgstr "Geben Sie Ihre Nachricht ein..."
 
-#: chats/views.py:29
+#: chats/views.py:31
+msgid "Изменить аватар"
+msgstr "Avatar ändern"
+
+#: chats/views.py:45
+msgid "Выйти"
+msgstr "Abmelden"
+
+#: chats/views.py:63
+msgid "Анимация фона"
+msgstr "Hintergrundanimation"
+
+#: chats/views.py:70
+msgid "Эффект размытия"
+msgstr "Unschärfeeffekt"
+
+#: chats/views.py:72
+msgid "Вызывает лаги и разряд батареи на мобильных устройствах"
+msgstr "Verursacht Verzögerungen und Batterieverbrauch auf Mobilgeräten"
+
+#: chats/views.py:78 chats/views.py:149
+msgid "Аккаунт"
+msgstr "Konto"
+
+#: chats/views.py:80
+msgid "Безопасность"
+msgstr "Sicherheit"
+
+#: chats/views.py:82 chats/views.py:153
+msgid "Оформление"
+msgstr "Stil"
+
+#: chats/views.py:100
 msgid "Нет сообщений"
 msgstr "Keine Nachrichten"
 
-#: chats/views.py:63
+#: chats/views.py:134
 msgid "Поиск:"
 msgstr "Suchen:"
 
-#: chats/views.py:215
+#: chats/views.py:294
 msgid "очень давно"
 msgstr "vor sehr langer Zeit"
+
+#: chats/views.py:299
+msgid "Был(а)"
+msgstr "War"
+
+#: chats/views.py:301
+msgid "Дата регистрации:"
+msgstr "Anmeldedatum:"
+
+#: chats/views.py:303
+msgid "Профиль"
+msgstr "Profil"
 
 #: main/templates/index.html:8
 msgid "Добро пожаловать в Rift messenger!"
 msgstr "Willkommen beim Rift-Messenger!"
 
-#: main/templates/index.html:24
+#: main/templates/index.html:23
 msgid "Инфо"
 msgstr "Info"
 
-#: main/templates/index.html:25 main/templates/index.html:73
+#: main/templates/index.html:24 main/templates/index.html:72
 msgid "Разработчики"
 msgstr "Entwickler"
 
-#: main/templates/index.html:27
+#: main/templates/index.html:26
 msgid "Поддержка"
 msgstr "Unterstützung"
 
-#: main/templates/index.html:50
+#: main/templates/index.html:49
 msgid "Начать!"
 msgstr "Beginnen!"
 
-#: main/templates/index.html:51
+#: main/templates/index.html:50
 msgid "Подробнее"
 msgstr "Weitere Details"
 
-#: main/templates/index.html:56
+#: main/templates/index.html:55
 msgid "Почему именно Rift?"
 msgstr "Warum Rift?"
 
-#: main/templates/index.html:60
+#: main/templates/index.html:59
 msgid "Лаконичный и простой интерфейс"
 msgstr "Lakonische und einfache Benutzeroberfläche"
 
-#: main/templates/index.html:64
+#: main/templates/index.html:63
 msgid "Высокое качество звонков"
 msgstr "Hohe Anrufqualität"
 
-#: main/templates/index.html:68
+#: main/templates/index.html:67
 msgid "Регулярные обновления"
 msgstr "Regelmäßige Updates"
 
-#: main/templates/index.html:78
+#: main/templates/index.html:77
 msgid "Дмитрий Осипов"
 msgstr "Dmitri Osipow"
 
-#: main/templates/index.html:79
+#: main/templates/index.html:78
 msgid "Главный разработчик"
 msgstr "Chefentwickler"
 
-#: main/templates/index.html:85
+#: main/templates/index.html:84
 msgid "Никита Стёпин"
 msgstr "Nikita Stepin"
 
-#: main/templates/index.html:86
+#: main/templates/index.html:85
 msgid "Тестировщик"
 msgstr "Tester"
 
-#: main/templates/index.html:122
+#: main/templates/index.html:121
 msgid "Нет аккаунта?"
 msgstr "Sie haben noch kein Konto?"

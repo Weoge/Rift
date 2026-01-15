@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-05 13:52+0000\n"
+"POT-Creation-Date: 2026-01-15 18:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,8 +22,7 @@ msgstr ""
 msgid "Фото"
 msgstr "Foto"
 
-#: static/js/context_menu.js:31 static/js/modal.js:35 static/js/modal.js:59
-#: static/js/modal.js:76
+#: static/js/context_menu.js:31
 msgid "Профиль"
 msgstr "Profil"
 
@@ -35,7 +34,19 @@ msgstr "Audioanruf"
 msgid "Видеозвонок"
 msgstr "Videoanruf"
 
-#: static/js/hotkeys.js:17 static/js/modal.js:127
+#: static/js/context_menu.js:89
+msgid "Введите новое имя пользователя"
+msgstr "Geben Sie einen neuen Benutzernamen ein"
+
+#: static/js/context_menu.js:94
+msgid "- От 3 до 15 символов."
+msgstr "- Von 3 bis 15 Zeichen."
+
+#: static/js/context_menu.js:95
+msgid "- Латинские буквы, цифры и '_'."
+msgstr "- Lateinische Buchstaben, Zahlen und „_“."
+
+#: static/js/hotkeys.js:16
 msgid "Поиск"
 msgstr "Suchen"
 
@@ -43,21 +54,13 @@ msgstr "Suchen"
 msgid "Введите сообщение..."
 msgstr "Geben Sie Ihre Nachricht ein..."
 
-#: static/js/load_chat.js:96
+#: static/js/load_chat.js:103
 msgid "Сообщений пока нет"
 msgstr "Noch keine Nachrichten"
 
-#: static/js/load_chat.js:108
+#: static/js/load_chat.js:116
 msgid "Вы"
 msgstr "Du"
-
-#: static/js/modal.js:55 static/js/modal.js:98
-msgid "Был(а)"
-msgstr "War"
-
-#: static/js/modal.js:56 static/js/modal.js:99
-msgid "Дата регистрации:"
-msgstr "Anmeldedatum:"
 
 #: static/js/video_call.js:46
 msgid "Подключение..."

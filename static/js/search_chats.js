@@ -18,7 +18,7 @@ function initSearchChats() {
         chatsContainer.innerHTML = '';
         
         data.results.forEach(chat => {
-            const chatElement = `
+            let chatElement = `
                 <div class="founded_element btn" onclick="showProfileData(${chat.user_id})">
                     <div class="avatar_container">
                         ${chat.avatar ? 
@@ -35,6 +35,10 @@ function initSearchChats() {
                 </div>
             `;
             chatsContainer.insertAdjacentHTML('beforeend', chatElement);
+            const isBlurOn = getCookie('blur_effect') === 'on';
+            if (isBlurOn) {
+                chatsContainer.querySelectorAll('.btn').forEach(el => el.classList.add('blured'));
+            }
         });
     });
 }

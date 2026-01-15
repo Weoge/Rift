@@ -83,6 +83,18 @@ function showContextMenu(pos, content, user_id) {
             <p class="font-bold" style="margin-left: 5px;">Українська</p>
         </div>
     `
+    const change_username_content = `
+        <form method="post" class="change_username_form" onsubmit="changeUsername(event, ${user_id}); return false;">
+            <div class="flex">
+                <input minlength="3" maxlength="15" autocomplete="off" pattern="[A-Za-z0-9_]*" type="text" name="username" class="input" placeholder="${gettext("Введите новое имя пользователя")}" required>
+                <button type="submit" style="margin-right: 10px;" class="small">
+                    <svg class="icon" width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+            </div>
+            <p style="color: #fff;">${gettext("- От 3 до 15 символов.")}</p>
+            <p style="color: #fff;">${gettext("- Латинские буквы, цифры и '_'.")}</p>
+        </form>
+    `
 
     context_menu.innerHTML = ``
     context_menu.classList.toggle("active")
@@ -92,7 +104,14 @@ function showContextMenu(pos, content, user_id) {
         context_menu.innerHTML = more_content
     } else if (content == 'lang_content') {
         context_menu.innerHTML = lang_content
+    } else if (content == 'change_username_content') {
+        context_menu.innerHTML = change_username_content
     }
+    
+    context_menu.style.top = 'auto'
+    context_menu.style.bottom = 'auto'
+    context_menu.style.left = 'auto'
+    
     if (pos == 'pin') {
         context_menu.style.bottom = `80px`
         context_menu.style.left = `10px`
@@ -103,17 +122,25 @@ function showContextMenu(pos, content, user_id) {
         context_menu.style.animation = `showTop 0.2s ease`
     } else if (pos == 'lang') {
         context_menu.dataset.pos = 'lang'
-        const headerExtra = document.querySelector('.header-extra')
-        const rect = headerExtra.getBoundingClientRect()
+        const rect = document.querySelector('.header-extra').getBoundingClientRect()
         context_menu.style.top = `${rect.bottom + 15}px`
         context_menu.style.left = `${rect.left + (rect.width - context_menu.offsetWidth) / 2}px`
-        context_menu.style.bottom = `auto`
+        context_menu.style.animation = `showTop 0.2s ease`
+    } else if (pos == 'change_username') {
+        const rect = document.querySelector('.change_username').getBoundingClientRect()
+        context_menu.style.top = `${rect.bottom - 5}px`
+        context_menu.style.left = `${rect.left + (rect.width - context_menu.offsetWidth) / 2}px`
+        context_menu.style.animation = `showTop 0.2s ease`
+    } else if (pos == 'lang_settings') {
+        const rect = document.querySelector('.change_lang_btn').getBoundingClientRect()
+        context_menu.style.top = `${rect.bottom + 15}px`
+        context_menu.style.left = `${rect.left + (rect.width - context_menu.offsetWidth) / 2}px`
         context_menu.style.animation = `showTop 0.2s ease`
     }
 }
 
 document.addEventListener('click', function(e) {
-    if (!e.target.closest('.context_menu') && !e.target.closest('.more') && !e.target.closest('.pin') && !e.target.closest('.select-lang-btn')) {
+    if (!e.target.closest('.context_menu') && !e.target.closest('.more') && !e.target.closest('.pin') && !e.target.closest('.select-lang-btn') && !e.target.closest('.change_username') && !e.target.closest('.change_lang_btn')) {
         hideContextMenu();
     }
 });

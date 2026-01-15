@@ -12,7 +12,8 @@
     width: 350px;
     height: 600px;
     z-index: 100;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: scroll;
     background-color: rgba(0, 0, 0, 0.55) !important;
 }
 

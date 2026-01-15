@@ -11,7 +11,6 @@ function change_language(language) {
     });
 }
 
-// Обновляем флаг при загрузке
 document.addEventListener('DOMContentLoaded', function() {
     const savedLanguage = localStorage.getItem('language') || 'ru';
     document.cookie = `language=${savedLanguage}; path=/; max-age=31536000`;

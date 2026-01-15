@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-07 11:09+0000\n"
+"POT-Creation-Date: 2026-01-15 18:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,12 +22,12 @@ msgid "Авторизация"
 msgstr "授权"
 
 #: authentication/templates/registration/login.html:12
-#: main/templates/index.html:103
+#: main/templates/index.html:102
 msgid "Вход"
 msgstr "登录"
 
 #: authentication/templates/registration/login.html:27
-#: main/templates/index.html:119
+#: main/templates/index.html:118
 msgid "Войти"
 msgstr "登录"
 
@@ -53,7 +53,7 @@ msgid "Выбрать аватар"
 msgstr "选择头像"
 
 #: authentication/templates/registration/signup.html:46
-#: main/templates/index.html:122
+#: main/templates/index.html:121
 msgid "Зарегистрироваться"
 msgstr "登记"
 
@@ -77,74 +77,118 @@ msgstr "设置"
 msgid "Введите сообщение..."
 msgstr "输入您的留言..."
 
-#: chats/views.py:29
+#: chats/views.py:31
+msgid "Изменить аватар"
+msgstr "更改头像"
+
+#: chats/views.py:45
+msgid "Выйти"
+msgstr "退出"
+
+#: chats/views.py:63
+msgid "Анимация фона"
+msgstr "背景动画"
+
+#: chats/views.py:70
+msgid "Эффект размытия"
+msgstr "模糊效果"
+
+#: chats/views.py:72
+msgid "Вызывает лаги и разряд батареи на мобильных устройствах"
+msgstr "导致移动设备出现延迟和电池耗尽"
+
+#: chats/views.py:78 chats/views.py:149
+msgid "Аккаунт"
+msgstr "帐户"
+
+#: chats/views.py:80
+msgid "Безопасность"
+msgstr "安全"
+
+#: chats/views.py:82 chats/views.py:153
+msgid "Оформление"
+msgstr "风格"
+
+#: chats/views.py:100
 msgid "Нет сообщений"
 msgstr "没有消息"
 
-#: chats/views.py:63
+#: chats/views.py:134
 msgid "Поиск:"
 msgstr "搜索："
 
-#: chats/views.py:215
+#: chats/views.py:294
 msgid "очень давно"
 msgstr "很久以前"
+
+#: chats/views.py:299
+msgid "Был(а)"
+msgstr "曾是"
+
+#: chats/views.py:301
+msgid "Дата регистрации:"
+msgstr "注册日期："
+
+#: chats/views.py:303
+msgid "Профиль"
+msgstr "轮廓"
 
 #: main/templates/index.html:8
 msgid "Добро пожаловать в Rift messenger!"
 msgstr "欢迎使用 Rift Messenger！"
 
-#: main/templates/index.html:24
+#: main/templates/index.html:23
 msgid "Инфо"
 msgstr "信息"
 
-#: main/templates/index.html:25 main/templates/index.html:73
+#: main/templates/index.html:24 main/templates/index.html:72
 msgid "Разработчики"
 msgstr "开发商"
 
-#: main/templates/index.html:27
+#: main/templates/index.html:26
 msgid "Поддержка"
 msgstr "支持"
 
-#: main/templates/index.html:50
+#: main/templates/index.html:49
 msgid "Начать!"
 msgstr "开始！"
 
-#: main/templates/index.html:51
+#: main/templates/index.html:50
 msgid "Подробнее"
 msgstr "更多详情"
 
-#: main/templates/index.html:56
+#: main/templates/index.html:55
 msgid "Почему именно Rift?"
 msgstr "为什么是裂谷？"
 
-#: main/templates/index.html:60
+#: main/templates/index.html:59
 msgid "Лаконичный и простой интерфейс"
 msgstr "简洁的界面"
 
-#: main/templates/index.html:64
+#: main/templates/index.html:63
 msgid "Высокое качество звонков"
 msgstr "高通话质量"
 
-#: main/templates/index.html:68
+#: main/templates/index.html:67
 msgid "Регулярные обновления"
 msgstr "定期更新"
 
-#: main/templates/index.html:78
+#: main/templates/index.html:77
 msgid "Дмитрий Осипов"
 msgstr "德米特里·奥西波夫"
 
-#: main/templates/index.html:79
+#: main/templates/index.html:78
 msgid "Главный разработчик"
 msgstr "首席开发人员"
 
-#: main/templates/index.html:85
+#: main/templates/index.html:84
 msgid "Никита Стёпин"
 msgstr "尼基塔·斯特平"
 
-#: main/templates/index.html:86
+#: main/templates/index.html:85
 msgid "Тестировщик"
 msgstr "测试员"
 
-#: main/templates/index.html:122
+#: main/templates/index.html:121
 msgid "Нет аккаунта?"
 msgstr "没有帐户？"
