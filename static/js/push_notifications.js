@@ -101,6 +101,14 @@ function urlBase64ToUint8Array(base64String) {
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/service-worker.js').then(reg => {
         console.log('SW registered:', reg);
-        setTimeout(() => subscribeToPush(), 1000);
+        if (document.readyState === 'complete') {
+            setTimeout(() => subscribeToPush(), 1000);
+            console.log('Document ready, subscribing to push');
+        } else {
+            window.addEventListener('load', () => {
+                setTimeout(() => subscribeToPush(), 1000);
+                console.log('Document ready, subscribing to push');
+            });
+        }
     }).catch(err => console.error('SW registration failed:', err));
 }
