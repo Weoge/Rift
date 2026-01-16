@@ -8,23 +8,24 @@ class VideoCall {
         this.currentChatId = null;
         this.isInitiator = false;
         this.pendingCandidates = [];
-        this.config = { 
-            iceServers: [
-                { urls: 'stun:stun.l.google.com:19302' },
-                { urls: 'stun:95.163.227.170:3478' },
-                {
-                    urls: 'turn:95.163.227.170:3478',
-                    username: 'riftturn',
-                    credential: 'riftturn'
-                },
-                {
-                    urls: 'turn:95.163.227.170:3478?transport=tcp',
-                    username: 'riftturn',
-                    credential: 'riftturn'
-                }
-            ],
-            iceCandidatePoolSize: 10
-        };
+        this.config = null;
+    }
+
+    async loadTurnConfig() {
+        try {
+            const response = await fetch('/app/turn/config/');
+            const data = await response.json();
+            this.config = {
+                iceServers: data.iceServers,
+                iceCandidatePoolSize: 10
+            };
+        } catch (error) {
+            console.error('Failed to load TURN config:', error);
+            this.config = {
+                iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
+                iceCandidatePoolSize: 10
+            };
+        }
     }
 
     async start(chatId, isInitiator) {
@@ -44,6 +45,10 @@ class VideoCall {
         
         overlay.classList.add('active');
         statusEl.textContent = `${gettext("Подключение...")}`;
+        
+        if (!this.config) {
+            await this.loadTurnConfig();
+        }
         
         try {
             this.localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
@@ -222,4 +227,8 @@ function startVideoCall() {
 
 function answerCall(chatId) {
     videoCall.start(chatId, false);
+}
+
+function deniceCall() {
+    videoCall.end();
 }

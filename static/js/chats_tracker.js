@@ -84,20 +84,12 @@ function updateChatElement(chat) {
 
 function handleIncomingCall(caller, chatId) {
     if (Notification.permission === 'granted') {
-        const notification = new Notification(`Входящий звонок от ${caller}`, {
-            body: 'Нажмите, чтобы ответить',
-            icon: '/static/images/icon.png',
-            requireInteraction: true
-        });
-        
-        notification.onclick = () => {
-            window.focus();
-            answerCall(chatId);
-            notification.close();
-        };
+        const avatarUrl = caller.avatar?.url || '/static/images/default-avatar.png';
+        sendNotification(caller.username || caller, 'Звонит вам', avatarUrl, 30, 'call', chatId);
+        return;
     }
     
-    if (confirm(`Входящий звонок от ${caller}. Ответить?`)) {
+    if (confirm(`Входящий звонок от ${caller.username || caller}. Ответить?`)) {
         answerCall(chatId);
     }
 }

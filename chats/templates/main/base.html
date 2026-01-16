@@ -21,11 +21,14 @@
     <div class="fullscreen_image_view" onclick="off_blur(); closeImage();"></div>
     <div class="context_menu bg"></div>
     <div class="notification bg">
-        <div class="avatar_container"><img class="notification_img talker" src=""></div>
-        <div class="notification_content">
-            <p class="notification_header" style="color: #fff;"><b></b></p>
-            <p class="notification_text" style="color: #fff;"></p>
+        <div class="flex">
+            <div class="avatar_container"><img class="notification_img talker" src=""></div>
+            <div class="notification_content">
+                <p class="notification_header" style="color: #fff;"><b></b></p>
+                <p class="notification_text" style="color: #fff;"></p>
+            </div>
         </div>
+        <div class="notification_extra flex"></div>
         <div class="notification_deco"></div>
     </div>
     <div class="modal bg">
@@ -49,6 +52,7 @@
     <script src="{% static 'js/modal.js' %}"></script>
     <script src="{% static 'js/hotkeys.js' %}"></script>
     <script src="{% static 'js/notifications.js' %}"></script>
+    <script src="{% static 'js/push_notifications.js' %}"></script>
     <script src="{% static 'js/message_tracker.js' %}"></script>
     <script src="{% static 'js/chats_tracker.js' %}"></script>
     <script src="/static/js/change_language.js"></script>

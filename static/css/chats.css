@@ -129,8 +129,6 @@
     border-radius: 50%;
     background: rgba(0, 0, 0, 0.2);
     outline: 2px solid rgba(0, 0, 0, 0.3);
-    /* backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px); */
     overflow-x: hidden !important;
     overflow-y: hidden !important;
     flex-shrink: 0;

@@ -184,3 +184,9 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+VAPID_PRIVATE_KEY = os.environ.get('VAPID_PRIVATE_KEY', '')
+VAPID_PUBLIC_KEY = os.environ.get('VAPID_PUBLIC_KEY', 'BAnHFVcKE93JwO5vAJMmRq4XJspM6k7K6djnZ7+lzt9TyCUDGjjCBw54M9i7XVQeekjQJaGDJxOOecDVtHHYT4w=')
+VAPID_CLAIMS = {
+    "sub": "mailto:noreply@riftproject.ru"
+}

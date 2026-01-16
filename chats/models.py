@@ -3,6 +3,16 @@ from authentication.models import User
 from properties.models import Avatar
 from chats.functions.message_hashator import decrypt_message_from_chat
 
+class PushSubscription(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='push_subscriptions')
+    endpoint = models.TextField()
+    p256dh = models.TextField()
+    auth = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'endpoint')
+
 class Chat(models.Model):
     first_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='first_user')
     second_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='second_user')

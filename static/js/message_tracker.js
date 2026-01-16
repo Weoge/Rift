@@ -10,7 +10,7 @@ function stopMessageTracking() {
 
 function handleNewMessageInCurrentChat(message) {
     if (!message.is_own) {
-        sendNotification(message.sender, message.text, message.sender_avatar);
+        sendNotification(message.sender, message.text, message.sender_avatar, 10, 'message');
     }
     
     if (currentChatId && message.chat_id === currentChatId) {

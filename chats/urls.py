@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from .functions.push_views import subscribe_push
+from .turn_views import get_turn_config
 
 app_name = 'chats'
 
@@ -12,5 +14,7 @@ urlpatterns = [
     path('profile/<int:user_id>/', views.get_profile, name='profile'),
     path('list/', views.get_chats_list, name='get_chats_list'),
     path('call/<int:chat_id>/initiate/', views.initiate_call, name='initiate_call'),
-    path('settings/', views.get_settings_data, name='settings')
+    path('settings/', views.get_settings_data, name='settings'),
+    path('push/subscribe/', subscribe_push, name='push_subscribe'),
+    path('turn/config/', get_turn_config, name='turn_config'),
 ]

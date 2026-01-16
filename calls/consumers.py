@@ -1,6 +1,8 @@
 import json
 import logging
 from channels.generic.websocket import AsyncWebsocketConsumer
+from channels.db import database_sync_to_async
+from chats.functions.push_utils import send_push_notification
 
 logger = logging.getLogger(__name__)
 
@@ -128,3 +130,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'caller': event['caller'],
             'chat_id': event['chat_id']
         }))
+        
+        await database_sync_to_async(send_push_notification)(
+            user=self.user,
+            title=event['caller'].get('username', 'Неизвестный'),
+            body='Звонит вам',
+            icon=event['caller'].get('avatar', {}).get('url'),
+            chat_id=event['chat_id'],
+            notification_type='call'
+        )
