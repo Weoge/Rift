@@ -370,11 +370,18 @@ def initiate_call(request, chat_id):
         talker = chat.get_talker(request.user)
         channel_layer = get_channel_layer()
         
+        caller_data = {
+            'username': request.user.username,
+            'avatar': {
+                'url': request.user.avatar.image.url if hasattr(request.user, 'avatar') else None
+            }
+        }
+        
         async_to_sync(channel_layer.group_send)(
             f'user_{talker.id}',
             {
                 'type': 'incoming_call',
-                'caller': request.user.username,
+                'caller': caller_data,
                 'chat_id': chat_id
             }
         )

@@ -125,7 +125,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         }))
     
     async def incoming_call(self, event):
-        logger.info(f'Incoming call for user {self.user.username} from {event.get("caller", {}).get("username")}')
+        caller = event.get('caller', {})
+        caller_name = caller.get('username', 'Неизвестный') if isinstance(caller, dict) else str(caller)
+        logger.info(f'Incoming call for user {self.user.username} from {caller_name}')
         
         await self.send(text_data=json.dumps({
             'type': 'incoming_call',
@@ -137,9 +139,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
             logger.info(f'Sending push notification to {self.user.username}')
             await database_sync_to_async(send_push_notification)(
                 user=self.user,
-                title=event['caller'].get('username', 'Неизвестный'),
+                title=caller_name,
                 body='Звонит вам',
-                icon=event['caller'].get('avatar', {}).get('url'),
+                icon=caller.get('avatar', {}).get('url') if isinstance(caller, dict) else None,
                 chat_id=event['chat_id'],
                 notification_type='call'
             )

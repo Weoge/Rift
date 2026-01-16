@@ -54,11 +54,11 @@ function sendNotification(header, text, img, time, type, chatId=null) {
         notificationExtra.innerHTML = callButtonsHtml;
         sound = new Audio('/static/sounds/call.mp3');
         sound.loop = true;
-        sound.play();
+        sound.play().catch(e => console.error('Call sound error:', e));
         callSounds.set(id, sound);
     } else {
         sound = new Audio('/static/sounds/notification.mp3');
-        sound.play();
+        sound.play().catch(e => console.error('Notification sound error:', e));
     }
 
     let topOffset = 10;
