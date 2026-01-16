@@ -12,10 +12,9 @@ from asgiref.sync import async_to_sync
 from django.utils.translation import gettext as _
 import os
 
-@login_required(login_url='/auth/login/')
 def get_vapid_public_key(request):
-    vapid_public_key = os.environ.get('VAPID_PUBLIC_KEY', '')
-    return JsonResponse({'vapid_public_key': vapid_public_key})
+    from django.conf import settings
+    return JsonResponse({'vapid_public_key': settings.VAPID_PUBLIC_KEY})
 
 @login_required(login_url='/auth/login/')
 def get_settings_data(request):

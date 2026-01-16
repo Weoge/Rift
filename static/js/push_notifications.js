@@ -1,9 +1,12 @@
-const VAPID_PUBLIC_KEY = null;
+let VAPID_PUBLIC_KEY = null;
+let keyLoaded = false;
 
-fetch('/chats/get_vapid_public_key/')
+fetch('/app/get_vapid_public_key/')
     .then(response => response.json())
     .then(data => {
         VAPID_PUBLIC_KEY = data.vapid_public_key;
+        keyLoaded = true;
+        console.log('VAPID key loaded');
     })
     .catch(error => console.error('Error fetching VAPID public key:', error));
 
@@ -28,6 +31,17 @@ async function requestNotificationPermission() {
 async function subscribeToPush() {
     if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
         console.log('Push не поддерживается');
+        return;
+    }
+    
+    let attempts = 0;
+    while (!keyLoaded && attempts < 50) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        attempts++;
+    }
+    
+    if (!VAPID_PUBLIC_KEY) {
+        console.error('VAPID_PUBLIC_KEY not loaded');
         return;
     }
     
