@@ -1,10 +1,19 @@
 from pywebpush import webpush, WebPushException
 from django.conf import settings
-from chats.models import PushSubscription
 import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 def send_push_notification(user, title, body, icon=None, chat_id=None, notification_type='message'):
+    from chats.models import PushSubscription
+    
     subscriptions = PushSubscription.objects.filter(user=user)
+    logger.info(f'Sending push to {user.username}, found {subscriptions.count()} subscriptions')
+    
+    if not subscriptions.exists():
+        logger.warning(f'No push subscriptions found for user {user.username}')
+        return
     
     payload = json.dumps({
         'title': title,
@@ -16,6 +25,7 @@ def send_push_notification(user, title, body, icon=None, chat_id=None, notificat
     
     for subscription in subscriptions:
         try:
+            logger.info(f'Sending to endpoint: {subscription.endpoint[:50]}...')
             webpush(
                 subscription_info={
                     'endpoint': subscription.endpoint,
@@ -28,6 +38,10 @@ def send_push_notification(user, title, body, icon=None, chat_id=None, notificat
                 vapid_private_key=settings.VAPID_PRIVATE_KEY,
                 vapid_claims=settings.VAPID_CLAIMS
             )
+            logger.info('Push sent successfully')
         except WebPushException as e:
-            if e.response.status_code in [404, 410]:
+            logger.error(f'WebPushException: {e}, status: {e.response.status_code if hasattr(e, "response") else "unknown"}')
+            if hasattr(e, 'response') and e.response.status_code in [404, 410]:
                 subscription.delete()
+        except Exception as e:
+            logger.error(f'Failed to send push: {e}')

@@ -125,17 +125,24 @@ class ChatConsumer(AsyncWebsocketConsumer):
         }))
     
     async def incoming_call(self, event):
+        logger.info(f'Incoming call for user {self.user.username} from {event.get("caller", {}).get("username")}')
+        
         await self.send(text_data=json.dumps({
             'type': 'incoming_call',
             'caller': event['caller'],
             'chat_id': event['chat_id']
         }))
         
-        await database_sync_to_async(send_push_notification)(
-            user=self.user,
-            title=event['caller'].get('username', 'Неизвестный'),
-            body='Звонит вам',
-            icon=event['caller'].get('avatar', {}).get('url'),
-            chat_id=event['chat_id'],
-            notification_type='call'
-        )
+        try:
+            logger.info(f'Sending push notification to {self.user.username}')
+            await database_sync_to_async(send_push_notification)(
+                user=self.user,
+                title=event['caller'].get('username', 'Неизвестный'),
+                body='Звонит вам',
+                icon=event['caller'].get('avatar', {}).get('url'),
+                chat_id=event['chat_id'],
+                notification_type='call'
+            )
+            logger.info('Push notification sent successfully')
+        except Exception as e:
+            logger.error(f'Failed to send push notification: {e}')
