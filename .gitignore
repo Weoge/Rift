@@ -4,3 +4,4 @@ __pycache__/
 turnserver.conf
 .env
 migrations/
+convert_vapid.py
