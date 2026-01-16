@@ -10,6 +10,12 @@ from chats.functions.message_hashator import encrypt_message_for_chat, decrypt_m
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from django.utils.translation import gettext as _
+import os
+
+@login_required(login_url='/auth/login/')
+def get_vapid_public_key(request):
+    vapid_public_key = os.environ.get('VAPID_PUBLIC_KEY', '')
+    return JsonResponse({'vapid_public_key': vapid_public_key})
 
 @login_required(login_url='/auth/login/')
 def get_settings_data(request):

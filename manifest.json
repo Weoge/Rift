@@ -16,9 +16,11 @@
       }
     ],
     "start_url": "/app",
-    "scope": "/app",
+    "scope": "/",
     "display": "standalone",
     "theme_color": "#000000",
     "background_color": "#000000",
-    "orientation": "portrait"
+    "orientation": "portrait",
+    "categories": ["social"],
+    "description": "Безопасный мессенджер с шифрованием R2HM"
 }

@@ -25,7 +25,14 @@ function removeNotification(notificationId) {
 }
 
 function sendNotification(header, text, img, time, type, chatId=null) {
-    new Notification(header, {body: text, icon: img});
+    if (Notification.permission === 'granted') {
+        new Notification(header, {body: text, icon: img, vibrate: [200, 100, 200]});
+    }
+    
+    if ('vibrate' in navigator) {
+        navigator.vibrate(type === 'call' ? [500, 200, 500, 200, 500] : [200]);
+    }
+    
     const template = document.querySelector('.notification');
     const clone = template.cloneNode(true);
     const id = notificationIdCounter++;
@@ -52,13 +59,27 @@ function sendNotification(header, text, img, time, type, chatId=null) {
 
     if (type === 'call') {
         notificationExtra.innerHTML = callButtonsHtml;
-        sound = new Audio('/static/sounds/call.mp3');
-        sound.loop = true;
-        sound.play().catch(e => console.error('Call sound error:', e));
-        callSounds.set(id, sound);
+        
+        const playSound = () => {
+            sound = new Audio('/static/sounds/call.mp3');
+            sound.loop = true;
+            sound.play().catch(e => console.log('Sound blocked:', e));
+            callSounds.set(id, sound);
+        };
+        
+        if (document.visibilityState === 'visible') {
+            playSound();
+        } else {
+            document.addEventListener('visibilitychange', function onVisible() {
+                if (document.visibilityState === 'visible') {
+                    playSound();
+                    document.removeEventListener('visibilitychange', onVisible);
+                }
+            });
+        }
     } else {
         sound = new Audio('/static/sounds/notification.mp3');
-        sound.play().catch(e => console.error('Notification sound error:', e));
+        sound.play().catch(e => console.log('Sound blocked:', e));
     }
 
     let topOffset = 10;

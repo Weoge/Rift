@@ -17,4 +17,5 @@ urlpatterns = [
     path('settings/', views.get_settings_data, name='settings'),
     path('push/subscribe/', subscribe_push, name='push_subscribe'),
     path('turn/config/', get_turn_config, name='turn_config'),
+    path('get_vapid_public_key/', views.get_vapid_public_key, name='get_vapid_public_key'),
 ]
