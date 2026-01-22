@@ -15,6 +15,10 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function logout() {
+    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({type: 'CLEAR_CACHE'});
+    }
+    
     fetch('/auth/logout/', {
         method: 'POST',
         headers: {
@@ -23,7 +27,10 @@ function logout() {
     })
     .then(response => {
         if (response.ok) {
-            window.location.href = '/';
+            document.cookie.split(";").forEach(c => {
+                document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+            });
+            window.location.replace('/');
         }
     })
     .catch(error => {

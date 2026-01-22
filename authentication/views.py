@@ -45,7 +45,11 @@ class Signup(View):
 @login_required(login_url='/auth/login/')
 def signout_view(request):
     logout(request)
-    return redirect('/')
+    response = redirect('/')
+    response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response['Pragma'] = 'no-cache'
+    response['Expires'] = '0'
+    return response
 
 class CustomLoginView(LoginView):
     template_name = 'registration/login.html'

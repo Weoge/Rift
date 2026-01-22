@@ -174,7 +174,7 @@ LOGOUT_REDIRECT_URL = '/'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 PASSWORD_RESET_TIMEOUT = 3600
-DEFAULT_FROM_EMAIL = 'noreply@rift-messenger.com'
+DEFAULT_FROM_EMAIL = 'noreply@riftproject.ru'
 
 CHANNEL_LAYERS = {
     'default': {
@@ -185,8 +185,6 @@ CHANNEL_LAYERS = {
     },
 }
 
-VAPID_PRIVATE_KEY = os.environ.get('VAPID_PRIVATE_KEY', 'q2XOA6Q0Cp0BY4YN_mv_0lyuaAOURXS9KgxU_U7VhHA')
-VAPID_PUBLIC_KEY = os.environ.get('VAPID_PUBLIC_KEY', 'BPFqf424g1STwRKcuxI91tEXp64OjHvOP7nCLn5zvx3aXBkyOYhrfAlI5EIXFbU3KSvZNx8Vlo6r3JHJeYTMFYM')
-VAPID_CLAIMS = {
-    "sub": "mailto:noreply@riftproject.ru"
-}
+VAPID_PUBLIC_KEY = os.environ.get("VAPID_PUBLIC_KEY", "")
+VAPID_PRIVATE_KEY = os.environ.get("VAPID_PRIVATE_KEY", "")
+VAPID_CLAIMS = {'sub': 'mailto:noreply@riftproject.ru'}

@@ -16,7 +16,7 @@ urlpatterns = [
     path('properties/', include('properties.urls', namespace="properties")),
     path('', include('main.urls', namespace="main")),
     path('lang/', include('lang.urls', namespace="lang")),
-    path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
+    path('jsi18n/', JavaScriptCatalog.as_view(), name='locale'),
     path('service-worker.js', serve, {'path': 'service-worker.js', 'document_root': settings.BASE_DIR}),
     path('manifest.json', serve, {'path': 'manifest.json', 'document_root': settings.BASE_DIR}),
 ]

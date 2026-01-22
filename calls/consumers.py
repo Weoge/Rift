@@ -127,6 +127,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def incoming_call(self, event):
         caller = event.get('caller', {})
         caller_name = caller.get('username', 'Неизвестный') if isinstance(caller, dict) else str(caller)
+        caller_avatar = caller.get('avatar', {}).get('url') if isinstance(caller, dict) else None
         logger.info(f'Incoming call for user {self.user.username} from {caller_name}')
         
         await self.send(text_data=json.dumps({
@@ -141,7 +142,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 user=self.user,
                 title=caller_name,
                 body='Звонит вам',
-                icon=caller.get('avatar', {}).get('url') if isinstance(caller, dict) else None,
+                url=f'/app?chat_id={event["chat_id"]}',
+                tag=f'call_{event["chat_id"]}',
+                icon=caller_avatar,
                 chat_id=event['chat_id'],
                 notification_type='call'
             )

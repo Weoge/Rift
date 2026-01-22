@@ -7,6 +7,7 @@ from properties.models import Avatar
 from chats.models import Chat, Messege, MessageImage
 from authentication.models import User
 from chats.functions.message_hashator import encrypt_message_for_chat, decrypt_message_from_chat
+from chats.functions.push_utils import send_push_notification
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from django.utils.translation import gettext as _
@@ -252,6 +253,20 @@ def send_message(request, chat_id):
                     }
                 }
             )
+            
+            try:
+                send_push_notification(
+                    talker,
+                    request.user.username,
+                    text[:100] if text else 'Изображение',
+                    f'/app?chat_id={chat.id}',
+                    f'chat_{chat.id}',
+                    icon=request.user.avatar.image.url if hasattr(request.user, 'avatar') else None,
+                    chat_id=chat.id,
+                    notification_type='message'
+                )
+            except Exception as e:
+                print(f'Push notification error: {e}')
             
             return JsonResponse({
                 'status': 'success',

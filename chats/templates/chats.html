@@ -83,7 +83,15 @@
         </div>
     </div>
     <div class="chats_menu bg">
-        <div class="upper_chats_menu">
+        <div class="upper_chats_menu" style="position: relative;">
+            <div class="connection_status active flex">
+                <div>
+                    <div class="loading">
+                        <div class="loader"></div>
+                    </div>
+                </div>
+                <p>Connecting...</p>
+            </div>
             <button class="small search_chats" onclick="showCustomModal('{% trans 'Поиск' %}', searchHtml); on_blur()">
                 <svg class="icon" width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 21L15.0001 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
@@ -256,6 +264,7 @@
     <script src="{% static 'js/context_menu.js' %}"></script>
     <script src="{% static 'js/change_language.js' %}"></script>
     <script src="{% static 'js/settings.js' %}"></script>
+    <script src="{% static 'js/push_notifications.js' %}"></script>
     <script>
         const searchHtml = `{{ searchHtml|safe }}`;
         const settingsHtml = `{{ settingsHtml|safe }}`;

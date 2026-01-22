@@ -1,15 +1,12 @@
 .loading {
-    width: 100px;
+    width: 50px;
     height: 6px;
     border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: inline-block;
+    position: relative;
     overflow: hidden;
-    position: absolute;
-    left: 50%;
     top: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateY(-50%);
 }
 
 .loader {
@@ -21,10 +18,14 @@
     position: absolute;
     left: 0;
     transform: translate(-50%);
-    animation: load 2s 0s infinite;
+    animation: load 1.5s linear infinite;
 }
 
 @keyframes load {
+    0% {
+        width: 0;
+        left: 0;
+    }
     25%, 75% {
         width: 50%;
         left: 50%;
@@ -32,6 +33,10 @@
     50% {
         width: 0;
         left: 100%;
+    }
+    100% {
+        width: 0;
+        left: 0;
     }
 }
 

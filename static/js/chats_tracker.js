@@ -1,6 +1,7 @@
 let chatSocket = null;
 let chatsCache = new Map();
 let updateThrottle = null;
+let connection_status = document.querySelector('.connection_status');
 
 function startChatsTracking() {
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -8,6 +9,7 @@ function startChatsTracking() {
     
     chatSocket.onopen = () => {
         console.log('WebSocket подключен');
+        connection_status.classList.remove('active');
         requestAnimationFrame(() => loadInitialChats());
     };
     
@@ -25,11 +27,13 @@ function startChatsTracking() {
     
     chatSocket.onclose = () => {
         console.log('WebSocket отключен, переподключение через 3 сек...');
+        connection_status.classList.add('active');
         setTimeout(startChatsTracking, 3000);
     };
     
     chatSocket.onerror = (error) => {
         console.error('WebSocket ошибка:', error);
+        connection_status.classList.add('active');
     };
 }
 
@@ -87,10 +91,6 @@ function handleIncomingCall(caller, chatId) {
         const avatarUrl = caller.avatar?.url || '/static/images/default-avatar.png';
         sendNotification(caller.username || caller, 'Звонит вам', avatarUrl, 30, 'call', chatId);
         return;
-    }
-    
-    if (confirm(`Входящий звонок от ${caller.username || caller}. Ответить?`)) {
-        answerCall(chatId);
     }
 }
 

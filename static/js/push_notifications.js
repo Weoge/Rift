@@ -1,71 +1,79 @@
 let VAPID_PUBLIC_KEY = null;
-let keyLoaded = false;
+let vapidKeyLoaded = false;
 
-fetch('/app/get_vapid_public_key/')
+function loadVapidKey() {
+    return fetch('/app/get_vapid_public_key/', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
     .then(response => response.json())
     .then(data => {
         VAPID_PUBLIC_KEY = data.vapid_public_key;
-        keyLoaded = true;
-        console.log('VAPID key loaded');
+        vapidKeyLoaded = true;
+        console.log('VAPID key loaded successfully');
+        requestNotificationPermission();
     })
-    .catch(error => console.error('Error fetching VAPID public key:', error));
+    .catch(err => {
+        console.error('Failed to get VAPID key:', err);
+        vapidKeyLoaded = false;
+    });
+}
+
+function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+    for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+}
 
 async function requestNotificationPermission() {
     if (!('Notification' in window)) {
         console.log('Notifications not supported');
-        return false;
+        return;
     }
     
-    if (Notification.permission === 'granted') {
-        return true;
+    if (!vapidKeyLoaded || !VAPID_PUBLIC_KEY) {
+        console.log('Waiting for VAPID key...');
+        return;
     }
     
-    if (Notification.permission !== 'denied') {
+    if (Notification.permission === 'default') {
         const permission = await Notification.requestPermission();
-        return permission === 'granted';
+        if (permission === 'granted') {
+            subscribeToPush();
+        }
+    } else if (Notification.permission === 'granted') {
+        subscribeToPush();
     }
-    
-    return false;
 }
 
 async function subscribeToPush() {
     if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-        console.log('Push не поддерживается');
+        console.log('Push not supported');
         return;
     }
-    
-    let attempts = 0;
-    while (!keyLoaded && attempts < 50) {
-        await new Promise(resolve => setTimeout(resolve, 100));
-        attempts++;
-    }
-    
-    if (!VAPID_PUBLIC_KEY) {
-        console.error('VAPID_PUBLIC_KEY not loaded');
-        return;
-    }
-    
-    const hasPermission = await requestNotificationPermission();
-    if (!hasPermission) {
-        console.log('Permission denied');
+
+    if (!vapidKeyLoaded || !VAPID_PUBLIC_KEY) {
+        console.log('VAPID key not loaded yet');
         return;
     }
 
     try {
         const registration = await navigator.serviceWorker.ready;
-        
         let subscription = await registration.pushManager.getSubscription();
-        if (subscription) {
-            console.log('Already subscribed');
-            return;
+
+        if (!subscription) {
+            subscription = await registration.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+            });
         }
-        
-        subscription = await registration.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
-        });
-        
-        console.log('Push subscription:', subscription);
 
         const response = await fetch('/app/push/subscribe/', {
             method: 'POST',
@@ -73,16 +81,16 @@ async function subscribeToPush() {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': getCookie('csrftoken')
             },
-            body: JSON.stringify(subscription)
+            body: JSON.stringify({ subscription: subscription.toJSON() })
         });
-        
+
         if (response.ok) {
-            console.log('Subscription saved');
+            console.log('Push subscription successful');
         } else {
-            console.error('Failed to save subscription:', await response.text());
+            console.error('Push subscription failed:', await response.text());
         }
     } catch (error) {
-        console.error('Ошибка подписки на push:', error);
+        console.error('Push subscription error:', error);
     }
 }
 
@@ -101,28 +109,33 @@ function getCookie(name) {
     return cookieValue;
 }
 
-function urlBase64ToUint8Array(base64String) {
-    const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
-    const rawData = window.atob(base64);
-    const outputArray = new Uint8Array(rawData.length);
-    for (let i = 0; i < rawData.length; ++i) {
-        outputArray[i] = rawData.charCodeAt(i);
-    }
-    return outputArray;
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js')
+        .then(reg => {
+            console.log('Service Worker registered');
+            return navigator.serviceWorker.ready;
+        })
+        .then(() => loadVapidKey())
+        .catch(err => console.error('Service Worker registration failed:', err));
 }
 
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/service-worker.js').then(reg => {
-        console.log('SW registered:', reg);
-        if (document.readyState === 'complete') {
-            setTimeout(() => subscribeToPush(), 1000);
-            console.log('Document ready, subscribing to push');
-        } else {
-            window.addEventListener('load', () => {
-                setTimeout(() => subscribeToPush(), 1000);
-                console.log('Document ready, subscribing to push');
-            });
+setInterval(async () => {
+    if ('serviceWorker' in navigator && 'PushManager' in window && vapidKeyLoaded) {
+        try {
+            const registration = await navigator.serviceWorker.ready;
+            const subscription = await registration.pushManager.getSubscription();
+            if (subscription) {
+                await fetch('/app/push/subscribe/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({ subscription: subscription.toJSON() })
+                });
+            }
+        } catch (e) {
+            console.error('Resubscription failed:', e);
         }
-    }).catch(err => console.error('SW registration failed:', err));
-}
+    }
+}, 24 * 60 * 60 * 1000);

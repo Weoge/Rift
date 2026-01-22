@@ -47,27 +47,18 @@
     </div>
     {% block content %}{% endblock %}
     {% block js_extra %}{% endblock %}
-    <script src="{% url 'javascript-catalog' %}"></script>
+    <script src="{% url 'locale' %}"></script>
     <script src="{% static 'js/blur.js' %}"></script>
     <script src="{% static 'js/modal.js' %}"></script>
     <script src="{% static 'js/hotkeys.js' %}"></script>
     <script src="{% static 'js/notifications.js' %}"></script>
-    <script src="{% static 'js/push_notifications.js' %}"></script>
     <script src="{% static 'js/message_tracker.js' %}"></script>
     <script src="{% static 'js/chats_tracker.js' %}"></script>
-    <script src="/static/js/change_language.js"></script>
+    <script src="{% static 'js/change_language.js' %}"></script>
     <script src="{% static 'js/cookies.js' %}"></script>
     <script>
-        let settings_categories = document.querySelectorAll(".category");
-        settings_categories[3].addEventListener("click", function() {
-            window.location.href = "{% url 'authentication:logout' %}";
-        });
-    </script>
-    <script>
         if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/service-worker.js')
-            .then(reg => console.log('SW registered'))
-            .catch(err => console.log('SW error:', err));
+            navigator.serviceWorker.register('/service-worker.js')
         }
     </script>
 </body>

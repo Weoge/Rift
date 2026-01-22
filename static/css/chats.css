@@ -579,3 +579,21 @@
         opacity: 100%;
     }
 }
+
+.connection_status {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.connection_status.active {
+    display: flex;
+    align-items: center;
+}
+
+.connection_status p {
+    color: #fff;
+    margin: 0 0 0 10px;
+}
