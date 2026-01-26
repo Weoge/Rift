@@ -66,6 +66,17 @@
     .message_text {
         top: 28px !important;
     }
+    .send_message_field.big {
+        height: 150px !important;
+    }
+    .images_preview {
+        bottom: 60px !important;
+    }
+    .image_preview_container {
+        width: 50px !important;
+        height: 50px !important;
+        margin: 3px !important;
+    }
 }
 
 @media (max-width: 384px) {
@@ -101,5 +112,10 @@
     }
     .left {
         width: calc(100% - 50px);
+    }
+    .image_preview_container {
+        width: 45px !important;
+        height: 45px !important;
+        margin: 2px !important;
     }
 }

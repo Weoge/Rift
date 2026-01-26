@@ -1,0 +1,22 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="icon" href="{% static 'images/icon.png' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/adaptive/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/legal/main.css' %}">
+    {% block css_extra %}{% endblock %}
+</head>
+<body>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <script src="/static/js/change_language.js"></script>
+    <script src="{% url 'locale' %}"></script>
+</body>
+</html>

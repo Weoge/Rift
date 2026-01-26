@@ -64,7 +64,7 @@ function showProfile(user_id) {
             profileHtml = `
                 <div class="profile">
                     <div class="talker_avatar avatar_profile" style="padding: 2px;">
-                        <div class="avatar_container">
+                        <div class="avatar_container_mid">
                             ${avatarHtml}
                         </div>
                     </div>

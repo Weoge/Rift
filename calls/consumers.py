@@ -2,7 +2,6 @@ import json
 import logging
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
-from chats.functions.push_utils import send_push_notification
 
 logger = logging.getLogger(__name__)
 
@@ -137,6 +136,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         }))
         
         try:
+            from chats.functions.push_utils import send_push_notification
             logger.info(f'Sending push notification to {self.user.username}')
             await database_sync_to_async(send_push_notification)(
                 user=self.user,

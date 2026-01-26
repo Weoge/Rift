@@ -11,7 +11,7 @@ from chats.functions.push_utils import send_push_notification
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from django.utils.translation import gettext as _
-import os
+import secrets
 
 def get_vapid_public_key(request):
     from django.conf import settings
@@ -231,6 +231,7 @@ def send_message(request, chat_id):
             message = Messege.objects.create(chat=chat, sender=request.user, text=encrypted_text)
             
             for image in images:
+                image.name = f'{secrets.token_hex(64)}.png'
                 MessageImage.objects.create(message=message, image=image)
             
             message_images = [img.image.url for img in message.messageimage_set.all()]

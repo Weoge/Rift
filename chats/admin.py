@@ -38,3 +38,7 @@ class UserKeysAdmin(admin.ModelAdmin):
 class ChatKeysAdmin(admin.ModelAdmin):
     list_display = ('chat', 'created_at')
     search_fields = ('chat__id',)
+
+@admin.register(PushSubscription)
+class PushSubscriptionAdmin(admin.ModelAdmin):
+    list_display = ('user', 'created_at')

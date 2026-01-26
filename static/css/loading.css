@@ -18,7 +18,7 @@
     position: absolute;
     left: 0;
     transform: translate(-50%);
-    animation: load 1.5s linear infinite;
+    animation: load 2s infinite;
 }
 
 @keyframes load {

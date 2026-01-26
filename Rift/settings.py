@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'properties',
     'channels',
     'calls',
-    'lang'
+    'lang',
+    'legal'
 ]
 
 CSRF_TRUSTED_ORIGINS = [

@@ -25,9 +25,9 @@ function removeNotification(notificationId) {
 }
 
 function sendNotification(header, text, img, time, type, chatId=null) {
-    if (Notification.permission === 'granted') {
-        new Notification(header, {body: text, icon: img, vibrate: [200, 100, 200]});
-    }
+    // if (Notification.permission === 'granted') {
+    //     new Notification(header, {body: text, icon: img, vibrate: [200, 100, 200]});
+    // }
     
     if ('vibrate' in navigator) {
         navigator.vibrate(type === 'call' ? [500, 200, 500, 200, 500] : [200]);

@@ -1,5 +1,9 @@
 function setupMessageForm(chatId, talker_username) {
     const messageForm = document.querySelector('.message-form');
+    const imageInput = document.getElementById('imageInput');
+    const imagesPreview = document.querySelector('.images_preview');
+    const send_message_field = document.querySelector('.send_message_field');
+    
     if (messageForm) {
         messageForm.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -19,6 +23,8 @@ function setupMessageForm(chatId, talker_username) {
             }
             
             if (messageText || (imageInput && imageInput.files.length > 0)) {
+                imagesPreview.innerHTML = '';
+                send_message_field.classList.remove('big');
                 fetch(`/app/messages/${chatId}/send/`, {
                     method: 'POST',
                     headers: {
