@@ -105,29 +105,36 @@ function updateChatsList(chats) {
     }
     
     const newChatsMap = new Map(chats.map(c => [c.chat_id, c]));
-    const fragment = document.createDocumentFragment();
-    let hasChanges = false;
     
-    chats.forEach(chat => {
-        const cached = chatsCache.get(chat.chat_id);
-        if (!cached || cached.last_message_text !== chat.last_message_text) {
-            const existingChat = chatsList.querySelector(`[data-chat-id="${chat.chat_id}"]`);
-            if (existingChat) {
-                updateChatElement(chat);
-            } else {
-                const chatEl = createChatElement(chat);
-                fragment.appendChild(chatEl);
-                hasChanges = true;
+    chats.forEach((chat, index) => {
+        let chatEl = chatsList.querySelector(`[data-chat-id="${chat.chat_id}"]`);
+        
+        if (chatEl) {
+            const lastMessageEl = chatEl.querySelector('.last_messege');
+            if (lastMessageEl) {
+                lastMessageEl.textContent = `${chat.last_message_sender} ${chat.last_message_text}`;
             }
-            chatsCache.set(chat.chat_id, chat);
+            
+            const currentIndex = Array.from(chatsList.children).indexOf(chatEl);
+            if (currentIndex !== index) {
+                const targetElement = chatsList.children[index];
+                if (targetElement) {
+                    chatsList.insertBefore(chatEl, targetElement);
+                } else {
+                    chatsList.appendChild(chatEl);
+                }
+            }
+        } else {
+            chatEl = createChatElement(chat);
+            if (chatsList.children[index]) {
+                chatsList.insertBefore(chatEl, chatsList.children[index]);
+            } else {
+                chatsList.appendChild(chatEl);
+            }
         }
+        
+        chatsCache.set(chat.chat_id, chat);
     });
-    
-    if (hasChanges) {
-        requestAnimationFrame(() => {
-            chatsList.appendChild(fragment);
-        });
-    }
     
     chatsCache.forEach((_, chatId) => {
         if (!newChatsMap.has(chatId)) {

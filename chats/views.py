@@ -107,19 +107,23 @@ def chats(request):
         except:
             talker_avatar = None
         last_message = chat.messege_set.order_by('-create_time').first()
-        last_message = chat.messege_set.order_by('-create_time').first()
         last_msg_text = _("Нет сообщений")
+        last_msg_time = None
         if last_message:
             try:
                 last_msg_text = decrypt_message_from_chat(last_message.text, chat, request.user)
             except:
                 last_msg_text = last_message.text
+            last_msg_time = last_message.create_time
         chat_data.append({
             'chat': chat,
             'talker': talker,
             'talker_avatar': talker_avatar,
-            'last_message': last_msg_text
+            'last_message': last_msg_text,
+            'last_message_time': last_msg_time
         })
+    
+    chat_data.sort(key=lambda x: x['last_message_time'] if x['last_message_time'] else chat.create_time, reverse=True)
     
     selected_chat_id = request.GET.get('chat_id')
     messages = []
@@ -346,6 +350,17 @@ def create_chat(request, user_id):
             return JsonResponse({'chat_id': existing_chat.id})
         
         new_chat = Chat.objects.create(first_user=request.user, second_user=second_user)
+        
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f'user_{request.user.id}',
+            {'type': 'chat_update'}
+        )
+        async_to_sync(channel_layer.group_send)(
+            f'user_{second_user.id}',
+            {'type': 'chat_update'}
+        )
+        
         return JsonResponse({'chat_id': new_chat.id})
     except User.DoesNotExist:
         return JsonResponse({'error': 'User not found'}, status=404)
