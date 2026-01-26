@@ -379,20 +379,25 @@ def get_chats_list(request):
         last_message = chat.messege_set.order_by('-create_time').first()
         last_msg_text = 'Нет сообщений'
         last_message_sender = None
+        last_msg_time = None
         if last_message:
             try:
                 last_msg_text = decrypt_message_from_chat(last_message.text, chat, request.user)
             except:
                 last_msg_text = last_message.text
             last_message_sender = last_message.sender
+            last_msg_time = last_message.create_time
         chats_data.append({
             'chat_id': chat.id,
             'talker_id': talker.id,
             'talker_username': talker.username,
             'talker_avatar': talker.avatar.image.url if hasattr(talker, 'avatar') else None,
             'last_message_text': last_msg_text,
-            'last_message_sender': last_message_sender.username + ":" if last_message_sender else ""
+            'last_message_sender': last_message_sender.username + ":" if last_message_sender else "",
+            'last_message_time': last_msg_time.timestamp() if last_msg_time else 0
         })
+    
+    chats_data.sort(key=lambda x: x['last_message_time'], reverse=True)
     
     return JsonResponse({'chats': chats_data})
 
