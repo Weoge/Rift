@@ -84,6 +84,7 @@ class CallConsumer(AsyncWebsocketConsumer):
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.user = self.scope['user']
+        self.is_active = True
         
         if not self.user.is_authenticated:
             await self.close()
@@ -98,6 +99,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.accept()
 
     async def disconnect(self, close_code):
+        self.is_active = False
         if hasattr(self, 'user_group_name'):
             await self.channel_layer.group_discard(
                 self.user_group_name,
@@ -110,12 +112,31 @@ class ChatConsumer(AsyncWebsocketConsumer):
         
         if message_type == 'ping':
             await self.send(text_data=json.dumps({'type': 'pong'}))
+        elif message_type == 'set_active':
+            self.is_active = data.get('active', True)
 
     async def new_message(self, event):
         await self.send(text_data=json.dumps({
             'type': 'new_message',
             'message': event['message']
         }))
+        
+        if not self.is_active:
+            try:
+                from chats.functions.push_utils import send_push_notification
+                message = event['message']
+                await database_sync_to_async(send_push_notification)(
+                    user=self.user,
+                    title=message.get('sender', ''),
+                    body=message.get('text', ''),
+                    url=f'/app?chat_id={message.get("chat_id")}',
+                    tag=f'chat_{message.get("chat_id")}',
+                    icon=message.get('sender_avatar'),
+                    chat_id=message.get('chat_id'),
+                    notification_type='message'
+                )
+            except Exception as e:
+                logger.error(f'Failed to send push notification: {e}')
     
     async def chat_update(self, event):
         await self.send(text_data=json.dumps({
@@ -135,19 +156,20 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'chat_id': event['chat_id']
         }))
         
-        try:
-            from chats.functions.push_utils import send_push_notification
-            logger.info(f'Sending push notification to {self.user.username}')
-            await database_sync_to_async(send_push_notification)(
-                user=self.user,
-                title=caller_name,
-                body='Звонит вам',
-                url=f'/app?chat_id={event["chat_id"]}',
-                tag=f'call_{event["chat_id"]}',
-                icon=caller_avatar,
-                chat_id=event['chat_id'],
-                notification_type='call'
-            )
-            logger.info('Push notification sent successfully')
-        except Exception as e:
-            logger.error(f'Failed to send push notification: {e}')
+        if not self.is_active:
+            try:
+                from chats.functions.push_utils import send_push_notification
+                logger.info(f'Sending push notification to {self.user.username}')
+                await database_sync_to_async(send_push_notification)(
+                    user=self.user,
+                    title=caller_name,
+                    body='Звонит вам',
+                    url=f'/app?chat_id={event["chat_id"]}',
+                    tag=f'call_{event["chat_id"]}',
+                    icon=caller_avatar,
+                    chat_id=event['chat_id'],
+                    notification_type='call'
+                )
+                logger.info('Push notification sent successfully')
+            except Exception as e:
+                logger.error(f'Failed to send push notification: {e}')

@@ -13,7 +13,6 @@ function loadVapidKey() {
         VAPID_PUBLIC_KEY = data.vapid_public_key;
         vapidKeyLoaded = true;
         console.log('VAPID key loaded successfully');
-        requestNotificationPermission();
     })
     .catch(err => {
         console.error('Failed to get VAPID key:', err);
@@ -116,6 +115,11 @@ if ('serviceWorker' in navigator) {
             return navigator.serviceWorker.ready;
         })
         .then(() => loadVapidKey())
+        .then(() => {
+            setTimeout(() => {
+                requestNotificationPermission();
+            }, 5000);
+        })
         .catch(err => console.error('Service Worker registration failed:', err));
 }
 

@@ -427,6 +427,20 @@ def initiate_call(request, chat_id):
             }
         )
         
+        try:
+            send_push_notification(
+                talker,
+                request.user.username,
+                'Входящий звонок',
+                f'/app?chat_id={chat_id}',
+                f'call_{chat_id}',
+                icon=request.user.avatar.image.url if hasattr(request.user, 'avatar') else None,
+                chat_id=chat_id,
+                notification_type='call'
+            )
+        except Exception as e:
+            print(f'Push notification error: {e}')
+        
         return JsonResponse({'status': 'success'})
     except Chat.DoesNotExist:
         return JsonResponse({'error': 'Chat not found'}, status=404)

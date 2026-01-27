@@ -55,7 +55,12 @@ function loadInitialChats() {
 }
 
 function handleNewMessage(message) {
-    updateSingleChat(message.chat_id);
+    fetch('/app/list/')
+        .then(response => response.json())
+        .then(data => {
+            updateChatsList(data.chats);
+        })
+        .catch(error => console.error('Error updating chats:', error));
     
     if (typeof handleNewMessageInCurrentChat === 'function') {
         handleNewMessageInCurrentChat(message);
