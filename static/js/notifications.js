@@ -54,7 +54,7 @@ function sendNotification(header, text, img, time, type, chatId=null) {
     `
 
     notification_header.innerText = header;
-    notification_text.innerText = text;
+    notification_text.innerText = text.length > 50 ? text.substring(0, 50) + '...' : text;
     notification_img.src = img;
 
     if (type === 'call') {

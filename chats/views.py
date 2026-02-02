@@ -11,6 +11,8 @@ from chats.functions.push_utils import send_push_notification
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from django.utils.translation import gettext as _
+from properties.models import *
+from datetime import datetime, timedelta
 import secrets
 
 def get_vapid_public_key(request):
@@ -195,6 +197,17 @@ def get_chat_messages(request, chat_id):
             
             images = [img.image.url for img in message.messageimage_set.all()]
             
+            message_date = message.create_time.strftime('%d.%m.%Y')
+            today = datetime.now().strftime('%d.%m.%Y')
+            yesterday = (datetime.now() - timedelta(days=1)).strftime('%d.%m.%Y')
+            
+            if message_date == today:
+                date_label = _("Сегодня")
+            elif message_date == yesterday:
+                date_label = _("Вчера")
+            else:
+                date_label = message_date
+            
             messages_data.append({
                 'text': decrypted_text,
                 'sender': message.sender.username,
@@ -203,6 +216,7 @@ def get_chat_messages(request, chat_id):
                 'user_avatar': request.user.avatar.image.url if hasattr(request.user, 'avatar') else None,
                 'is_own': message.sender == request.user,
                 'time': message.create_time.strftime('%H:%M'),
+                'date': date_label,
                 'images': images
             })
         
@@ -217,6 +231,11 @@ def send_message(request, chat_id):
             chat = Chat.objects.get(id=chat_id)
             if chat.first_user != request.user and chat.second_user != request.user:
                 return JsonResponse({'error': 'Access denied'}, status=403)
+            
+            talker = chat.get_talker(request.user)
+            blocked_users = BlockedUsers.objects.filter(blocker=talker).first()
+            if blocked_users and blocked_users.blocked.filter(id=request.user.id).exists():
+                return JsonResponse({'error': 'You are blocked'}, status=403)
             
             text = request.POST.get('message', '')
             images = request.FILES.getlist('images')
@@ -240,6 +259,17 @@ def send_message(request, chat_id):
             
             message_images = [img.image.url for img in message.messageimage_set.all()]
             
+            message_date = message.create_time.strftime('%d.%m.%Y')
+            today = datetime.now().strftime('%d.%m.%Y')
+            yesterday = (datetime.now() - timedelta(days=1)).strftime('%d.%m.%Y')
+            
+            if message_date == today:
+                date_label = _("Сегодня")
+            elif message_date == yesterday:
+                date_label = _("Вчера")
+            else:
+                date_label = message_date
+            
             channel_layer = get_channel_layer()
             talker = chat.get_talker(request.user)
 
@@ -254,6 +284,7 @@ def send_message(request, chat_id):
                         'sender_avatar': request.user.avatar.image.url if hasattr(request.user, 'avatar') else None,
                         'is_own': False,
                         'time': message.create_time.strftime('%H:%M'),
+                        'date': date_label,
                         'images': message_images
                     }
                 }
@@ -263,7 +294,7 @@ def send_message(request, chat_id):
                 send_push_notification(
                     talker,
                     request.user.username,
-                    text[:100] if text else 'Изображение',
+                    text if text else 'Изображение',
                     f'/app?chat_id={chat.id}',
                     f'chat_{chat.id}',
                     icon=request.user.avatar.image.url if hasattr(request.user, 'avatar') else None,
@@ -281,6 +312,7 @@ def send_message(request, chat_id):
                     'sender_avatar': request.user.avatar.image.url if hasattr(request.user, 'avatar') else None,
                     'is_own': True,
                     'time': message.create_time.strftime('%H:%M'),
+                    'date': date_label,
                     'images': message_images
                 }
             })
@@ -409,6 +441,11 @@ def initiate_call(request, chat_id):
             return JsonResponse({'error': 'Access denied'}, status=403)
         
         talker = chat.get_talker(request.user)
+        
+        blocked_users = BlockedUsers.objects.filter(blocker=talker).first()
+        if blocked_users and blocked_users.blocked.filter(id=request.user.id).exists():
+            return JsonResponse({'status': 'success'})
+        
         channel_layer = get_channel_layer()
         
         caller_data = {
@@ -441,6 +478,17 @@ def initiate_call(request, chat_id):
         except Exception as e:
             print(f'Push notification error: {e}')
         
+        return JsonResponse({'status': 'success'})
+    except Chat.DoesNotExist:
+        return JsonResponse({'error': 'Chat not found'}, status=404)
+
+@login_required(login_url='/auth/login/')
+def delete_chat(request, chat_id):
+    try:
+        chat = Chat.objects.get(id=chat_id)
+        if chat.first_user != request.user and chat.second_user != request.user:
+            return JsonResponse({'error': 'Access denied'}, status=403)
+        chat.delete()
         return JsonResponse({'status': 'success'})
     except Chat.DoesNotExist:
         return JsonResponse({'error': 'Chat not found'}, status=404)

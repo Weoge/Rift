@@ -18,7 +18,7 @@ function hideContextMenu() {
     context_menu.classList.remove("active");
 }
 
-function showContextMenu(pos, content, user_id) {
+function showContextMenu(pos, content, user_id, chat_id) {
     const pin_content = `
         <label onclick="hideContextMenu();" for="imageInputDynamic" class="btn" style="margin-right: 3px; cursor: pointer;">
             <svg class="icon" width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.2 21H6.93137C6.32555 21 6.02265 21 5.88238 20.8802C5.76068 20.7763 5.69609 20.6203 5.70865 20.4608C5.72312 20.2769 5.93731 20.0627 6.36569 19.6343L14.8686 11.1314C15.2646 10.7354 15.4627 10.5373 15.691 10.4632C15.8918 10.3979 16.1082 10.3979 16.309 10.4632C16.5373 10.5373 16.7354 10.7354 17.1314 11.1314L21 15V16.2M16.2 21C17.8802 21 18.7202 21 19.362 20.673C19.9265 20.3854 20.3854 19.9265 20.673 19.362C21 18.7202 21 17.8802 21 16.2M16.2 21H7.8C6.11984 21 5.27976 21 4.63803 20.673C4.07354 20.3854 3.6146 19.9265 3.32698 19.362C3 18.7202 3 17.8802 3 16.2V7.8C3 6.11984 3 5.27976 3.32698 4.63803C3.6146 4.07354 4.07354 3.6146 4.63803 3.32698C5.27976 3 6.11984 3 7.8 3H16.2C17.8802 3 18.7202 3 19.362 3.32698C19.9265 3.6146 20.3854 4.07354 20.673 4.63803C21 5.27976 21 6.11984 21 7.8V16.2M10.5 8.5C10.5 9.60457 9.60457 10.5 8.5 10.5C7.39543 10.5 6.5 9.60457 6.5 8.5C6.5 7.39543 7.39543 6.5 8.5 6.5C9.60457 6.5 10.5 7.39543 10.5 8.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
@@ -26,7 +26,7 @@ function showContextMenu(pos, content, user_id) {
         </label>
     `
     const more_content = `
-        <div class="btn" onclick="on_blur(); showProfile(${user_id});">
+        <div class="btn" onclick="on_blur(); showProfile(${user_id}, ${chat_id || 'null'});">
             <svg class="icon" width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 21C20 19.6044 20 18.9067 19.8278 18.3389C19.44 17.0605 18.4395 16.06 17.1611 15.6722C16.5933 15.5 15.8956 15.5 14.5 15.5H9.5C8.10444 15.5 7.40665 15.5 6.83886 15.6722C5.56045 16.06 4.56004 17.0605 4.17224 18.3389C4 18.9067 4 19.6044 4 21M16.5 7.5C16.5 9.98528 14.4853 12 12 12C9.51472 12 7.5 9.98528 7.5 7.5C7.5 5.01472 9.51472 3 12 3C14.4853 3 16.5 5.01472 16.5 7.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
             ${gettext("Профиль")}
         </div>
@@ -106,6 +106,42 @@ function showContextMenu(pos, content, user_id) {
         context_menu.innerHTML = lang_content
     } else if (content == 'change_username_content') {
         context_menu.innerHTML = change_username_content
+    } else if (content == 'more_user_content') {
+        fetch(`/properties/check_blocked/${user_id}/`)
+        .then(response => response.json())
+        .then(data => {
+            const blockButton = data.is_blocked 
+                ? `<div class="btn" style="margin: 10px 5px;" onclick="unblockUser(${user_id || 'null'});">
+                    <svg class="icon" width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.93 4.93L19.07 19.07M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Разблокировать
+                </div>`
+                : `<div class="btn" style="margin: 10px 5px;" onclick="blockUser(${user_id || 'null'});">
+                    <svg class="icon" width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.93 4.93L19.07 19.07M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Заблокировать
+                </div>`;
+            
+            const more_user_content = `
+                ${blockButton}
+                <div class="btn" style="margin: 10px 5px;" onclick="deleteChat(${chat_id || 'null'});">
+                    <svg class="icon" width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 6V5.2C16 4.0799 16 3.51984 15.782 3.09202C15.5903 2.71569 15.2843 2.40973 14.908 2.21799C14.4802 2 13.9201 2 12.8 2H11.2C10.0799 2 9.51984 2 9.09202 2.21799C8.71569 2.40973 8.40973 2.71569 8.21799 3.09202C8 3.51984 8 4.0799 8 5.2V6M10 11.5V16.5M14 11.5V16.5M3 6H21M19 6V17.2C19 18.8802 19 19.7202 18.673 20.362C18.3854 20.9265 17.9265 21.3854 17.362 21.673C16.7202 22 15.8802 22 14.2 22H9.8C8.11984 22 7.27976 22 6.63803 21.673C6.07354 21.3854 5.6146 20.9265 5.32698 20.362C5 19.7202 5 18.8802 5 17.2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Удалить переписку
+                </div>
+            `;
+            context_menu.innerHTML = more_user_content;
+            
+            if (pos == 'more_user_pos') {
+                context_menu.style.top = `calc(100% - ${context_menu.offsetHeight}px - 80px)`
+                context_menu.style.left = `calc(100% - ${context_menu.offsetWidth}px - 10px)`
+                context_menu.style.animation = `showTop 0.2s ease`
+            } else if (pos == 'more_user_pos_profile') {
+                const rect = document.querySelector('.extra_user').getBoundingClientRect()
+                context_menu.style.top = `${rect.bottom + 15}px`
+                context_menu.style.bottom = 'auto'
+                context_menu.style.left = `${rect.left + (rect.width - context_menu.offsetWidth)}px`
+                context_menu.style.animation = `showTop 0.2s ease`
+            }
+        });
+        return;
     }
     
     context_menu.style.top = 'auto'
@@ -117,7 +153,10 @@ function showContextMenu(pos, content, user_id) {
         context_menu.style.left = `10px`
         context_menu.style.animation = `showBottom 0.2s ease`
     } else if (pos == 'more') {
-        context_menu.style.bottom = `calc(100% - ${context_menu.offsetHeight}px - 80px`
+        const viewportHeight = window.innerHeight;
+        const menuHeight = context_menu.offsetHeight;
+        const bottomPos = Math.min(menuHeight + 80, viewportHeight - 20);
+        context_menu.style.bottom = `calc(100% - ${bottomPos}px)`
         context_menu.style.left = `calc(100% - ${context_menu.offsetWidth}px - 10px)`
         context_menu.style.animation = `showTop 0.2s ease`
     } else if (pos == 'lang') {
@@ -140,7 +179,7 @@ function showContextMenu(pos, content, user_id) {
 }
 
 document.addEventListener('click', function(e) {
-    if (!e.target.closest('.context_menu') && !e.target.closest('.more') && !e.target.closest('.pin') && !e.target.closest('.select-lang-btn') && !e.target.closest('.change_username') && !e.target.closest('.change_lang_btn')) {
+    if (!e.target.closest('.context_menu') && !e.target.closest('.more') && !e.target.closest('.pin') && !e.target.closest('.select-lang-btn') && !e.target.closest('.change_username') && !e.target.closest('.change_lang_btn') && !e.target.closest('.extra_user')) {
         hideContextMenu();
     }
 });

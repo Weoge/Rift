@@ -20,7 +20,7 @@
         max-width: 100% !important;
     }
     .messages {
-        width: calc(100% + 60px);
+        width: calc(100% + 50px);
         margin-left: -30px;
     }
 }
@@ -40,6 +40,7 @@
         height: 100%;
     }
     .messages {
+        width: calc(100% + 50px);
         height: calc(100vh - 205px + 30px) !important;
         margin-top: 40px !important;
     }
@@ -117,5 +118,11 @@
         width: 45px !important;
         height: 45px !important;
         margin: 2px !important;
+    }
+    .context_menu {
+        height: auto !important;
+        min-width: auto !important;
+        max-height: auto !important;
+        overflow-y: visible !important;
     }
 }

@@ -3,9 +3,9 @@
     margin: 0;
     box-sizing: border-box;
     font-family: 'Arial', sans-serif;
+    /* outline: 0.1px solid red; */
     overflow-x: hidden;
     overflow-y: visible;
-    /* outline: 0.1px solid red; */
 }
 
 .text_warn {
@@ -324,6 +324,15 @@ a {
     align-items: start;
     transition: all 0.5s ease;
     z-index: 10000;
+    overflow: hidden;
+}
+
+.notification_text {
+    overflow: hidden !important;
+    white-space: nowrap !important;
+    text-overflow: ellipsis !important;
+    max-width: 100% !important; 
+    display: inline-block !important;
 }
 
 .notification.show {
@@ -334,6 +343,8 @@ a {
 
 .notification_content {
     margin-left: 10px;
+    width: calc(100% - 60px);
+    overflow: hidden;
 }
 
 .notification_deco {

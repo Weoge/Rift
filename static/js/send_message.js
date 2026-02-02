@@ -40,6 +40,25 @@ function setupMessageForm(chatId, talker_username) {
                         }
                         messageInput.value = '';
                         if (imageInput) imageInput.value = '';
+                    } else if (data.error === 'You are blocked') {
+                        const now = new Date();
+                        const fakeMessage = {
+                            text: messageText,
+                            sender: '',
+                            sender_avatar: null,
+                            user_avatar: null,
+                            is_own: true,
+                            time: now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0'),
+                            images: []
+                        };
+                        const messagesContainer = document.querySelector('.messages');
+                        if (messagesContainer && typeof createMessageElement === 'function') {
+                            const messageEl = createMessageElement(fakeMessage);
+                            messagesContainer.appendChild(messageEl);
+                            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                        }
+                        messageInput.value = '';
+                        if (imageInput) imageInput.value = '';
                     } else {
                         console.error('Error:', data.error);
                     }

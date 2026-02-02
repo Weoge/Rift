@@ -15,7 +15,7 @@ let profileDataHtml = `
 `;
 
 
-function showCustomModal(title, modalContent) {
+function showCustomModal(title, modalContent, extra_buttons) {
     modal_content.innerHTML = "";
     modal.classList.add("visible");
     modal_title.innerHTML = title;
@@ -27,6 +27,9 @@ function showCustomModal(title, modalContent) {
             <svg class="icon" width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
         </button>
         <span class="title font-bold">${title}</span>
+        <div class="modal_extra_buttons">
+            ${extra_buttons || ''}
+        </div>
     `;
     modal_up.innerHTML = modal_up_new;
 
@@ -48,7 +51,7 @@ function showCustomModal(title, modalContent) {
     }
 }
 
-function showProfile(user_id) {
+function showProfile(user_id, chat_id) {
     const context_menu = document.querySelector(".context_menu");
     context_menu.classList.toggle("active")
 
@@ -61,6 +64,18 @@ function showProfile(user_id) {
                 <span class="blur_loader"></span>
                 <img src="${data.avatar}" class="talker">
                 `;
+            
+            let mediaContentHtml = '';
+            if (data.media_content && data.media_content.length > 0) {
+                for (let i = 0; i < data.media_content.length; i++) {
+                    mediaContentHtml += `
+                    <div class="media_item" onclick="openImage('${data.media_content[i].url}');">
+                        <img src="${data.media_content[i].url}" class="chat_media_item">
+                    </div>
+                    `;
+                }
+            }
+            
             profileHtml = `
                 <div class="profile">
                     <div class="talker_avatar avatar_profile" style="padding: 2px;">
@@ -71,9 +86,17 @@ function showProfile(user_id) {
                     <p class="font-bold" style="color: #fff; font-size: 28px;">${data.username}</p>
                     <p style="color: #fff;">${data.last_login_text}</p>
                     <p style="color: #fff;">${data.date_joined_text}</p>
+                    <div class="chat_media_content">
+                        ${mediaContentHtml}
+                    </div>
                 </div>
             `;
-            showCustomModal(data.profile_title, profileHtml);
+            extra_buttonsHtml = `
+                <button class="small extra_user" onclick="showContextMenu('more_user_pos_profile', 'more_user_content', ${user_id}, ${chat_id || 'null'});">
+                    <svg class="icon" width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 13C19.5523 13 20 12.5523 20 12C20 11.4477 19.5523 11 19 11C18.4477 11 18 11.4477 18 12C18 12.5523 18.4477 13 19 13Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 13C5.55228 13 6 12.5523 6 12C6 11.4477 5.55228 11 5 11C4.44772 11 4 11.4477 4 12C4 12.5523 4.44772 13 5 13Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+            `;
+            showCustomModal(data.profile_title, profileHtml, extra_buttonsHtml);
         })
         .catch(error => {
             console.error('Error loading profile:', error);

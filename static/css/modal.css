@@ -21,10 +21,20 @@
     display: flex;
     align-items: center;
     padding: 5px;
+    position: relative;
 }
 
 .title {
     margin-left: 15px;
     font-size: 28px;
     color: #fff;
+}
+
+.modal_extra_buttons {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 5px;
 }
