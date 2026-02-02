@@ -1,4 +1,4 @@
-function deleteChat (chatId) {
+function deleteChat(chatId) {
     if (!chatId || chatId === 'null') {
         console.error('Invalid chat ID');
         return;
