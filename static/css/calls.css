@@ -6,6 +6,7 @@
     height: 300px;
     overflow: hidden;
     transform: translateY(-410px);
+    transition: transform 0.3s ease;
 }
 .video-call-overlay.active { 
     display: block;
@@ -22,6 +23,9 @@
     width: 200px;
     height: 150px;
     margin: 30px 10px;
+    padding: 0;
+    border-radius: 12px;
+    object-fit: cover;
 }
 
 .call-controls {
@@ -34,6 +38,14 @@
     overflow: hidden;
 }
 
+.call-controls button.muted {
+    background: rgba(255, 59, 48, 0.8) !important;
+}
+
+.call-controls button.muted:hover {
+    background: rgba(255, 59, 48, 1) !important;
+}
+
 .call-status {
     position: absolute;
     top: 20px;
@@ -44,4 +56,5 @@
     padding: 10px 20px;
     border-radius: 20px;
     font-size: 14px;
+    z-index: 10;
 }

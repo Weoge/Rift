@@ -1,7 +1,7 @@
 .vscode/
 venv/
 __pycache__/
-turnserver.conf
+coturn/
 .env
 migrations/
 media/
