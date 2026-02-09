@@ -164,7 +164,7 @@
     align-items: center;
 }
 
-.chat_content {
+#chat_content {
     position: fixed;
     right: -100%;
     top: 0;
@@ -178,15 +178,15 @@
     transform: translateZ(0);
 }
 
-.chat_content.active {
+#chat_content.active {
     right: -10px;
 }
 
-.chat_content.hide {
+#chat_content.hide {
     width: calc(100% - 90px);
 }
 
-.chat_content.hide.active {
+#chat_content.hide.active {
     right: -10px;
 }
 

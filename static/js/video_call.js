@@ -45,6 +45,7 @@ class VideoCall {
         
         const chat_content = document.getElementById('chat_content');
         if (chat_content) {
+            chat_content.style.top = '310px';
             chat_content.style.bottom = '0';
             chat_content.style.height = 'calc(100vh - 310px)';
             const messages = chat_content.querySelector('messages');
