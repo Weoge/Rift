@@ -45,8 +45,8 @@ class VideoCall {
         
         const chat_content = document.getElementById('chat_content');
         if (chat_content) {
-            chat_content.style.top = 'auto';
-            chat_content.style.height = 'calc(100% - 310px)';
+            chat_content.style.bottom = '0';
+            chat_content.style.height = 'calc(100vh - 310px)';
             const messages = chat_content.querySelector('messages');
             if (messages) {
                 messages.style.height = 'calc(100vh - 205px - 310px)';
@@ -232,6 +232,16 @@ class VideoCall {
         document.querySelector('.video-call-overlay').classList.remove('active');
         document.getElementById('localVideo').srcObject = null;
         document.getElementById('remoteVideo').srcObject = null;
+
+        const chat_content = document.getElementById('chat_content');
+        if (chat_content) {
+            chat_content.style.top = '0';
+            chat_content.style.height = '100vh';
+            const messages = chat_content.querySelector('messages');
+            if (messages) {
+                messages.style.height = 'calc(100vh - 205px)';
+            }
+        }
     }
 }
 
