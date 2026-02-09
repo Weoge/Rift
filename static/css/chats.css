@@ -695,3 +695,19 @@
     font-size: 12px;
     font-weight: 600;
 }
+
+.scroll_down {
+    position: fixed;
+    left: 50%;
+    bottom: 110px;
+    transform: translate(-50%);
+    display: none;
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.scroll_down.show {
+    display: flex;
+    opacity: 1;
+}

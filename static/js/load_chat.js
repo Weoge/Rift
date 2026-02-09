@@ -97,6 +97,11 @@ function loadChat(chatId, talker_username, talker_id) {
     .then(response => response.json())
     .then(data => {
         const messagesContainer = document.querySelector('.messages');
+        messagesContainer.innerHTML = `
+            <div class="scroll_down small" onclick="scrollDown();">
+                <svg class="icon" width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+        `;
         if (data.messages && data.messages.length > 0) {
             const fragment = document.createDocumentFragment();
             let lastDate = null;
@@ -121,7 +126,16 @@ function loadChat(chatId, talker_username, talker_id) {
             messagesContainer.innerHTML = `<p class="no_messages">${gettext("Сообщений пока нет")}</p>`;
         }
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        
+        messagesContainer.addEventListener('scroll', function() {
+            const scrollBtn = document.querySelector('.scroll_down');
+            if (isBlurOn) {
+                scrollBtn.classList.add('blured');
+            }
+            if (scrollBtn) {
+                const isScrolledUp = messagesContainer.scrollHeight - messagesContainer.scrollTop - messagesContainer.clientHeight > 100;
+                scrollBtn.classList.toggle('show', isScrolledUp);
+            }
+        });
     })
     .catch(error => console.error('Error loading messages:', error));
 }
