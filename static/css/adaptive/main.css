@@ -23,6 +23,31 @@
         width: calc(100% + 50px);
         margin-left: -30px;
     }
+    .video-call-overlay.active~.chat_content.active {
+        height: 100vh !important;
+    }
+    .video-call-overlay.active~.chat_content.active .chat_content .messages {
+        height: calc(100vh - 205px) !important;
+    }
+    .video-call-overlay.active {
+        border-radius: 0;
+        background-color: #171819;
+        z-index: 10000;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+    }
+    .video-call-overlay.active .video {
+        flex-direction: column;
+        height: calc(100vh - 200px);
+        overflow-x: hidden;
+        overflow-y: scroll;
+    }
+    #localVideo, #remoteVideo {
+        width: 400px !important;
+        height: 300px !important;
+    }
 }
 
 @media (max-width: 520px) {
@@ -78,6 +103,31 @@
         height: 50px !important;
         margin: 3px !important;
     }
+    .video-call-overlay.active~.chat_content.active {
+        height: 100vh !important;
+    }
+    .video-call-overlay.active~.chat_content.active .chat_content .messages {
+        height: calc(100vh - 205px) !important;
+    }
+    .video-call-overlay.active {
+        border-radius: 0;
+        background-color: #171819;
+        z-index: 10000;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+    }
+    .video-call-overlay.active .video {
+        flex-direction: column;
+        height: calc(100vh - 200px);
+        overflow-x: hidden;
+        overflow-y: scroll;
+    }
+    #localVideo, #remoteVideo {
+        width: 300px !important;
+        height: 225px !important;
+    }
 }
 
 @media (max-width: 384px) {
@@ -124,5 +174,30 @@
         min-width: auto !important;
         max-height: auto !important;
         overflow-y: visible !important;
+    }
+    .video-call-overlay.active~.chat_content.active {
+        height: 100vh !important;
+    }
+    .video-call-overlay.active~.chat_content.active .chat_content .messages {
+        height: calc(100vh - 205px) !important;
+    }
+    .video-call-overlay.active {
+        border-radius: 0;
+        background-color: #171819;
+        z-index: 10000;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+    }
+    .video-call-overlay.active .video {
+        flex-direction: column;
+        height: calc(100vh - 200px);
+        overflow-x: hidden;
+        overflow-y: scroll;
+    }
+    #localVideo, #remoteVideo {
+        width: 200px !important;
+        height: 150px !important;
     }
 }

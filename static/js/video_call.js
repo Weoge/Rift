@@ -9,6 +9,8 @@ class VideoCall {
         this.isInitiator = false;
         this.pendingCandidates = [];
         this.config = null;
+        this.callStartTime = null;
+        this.durationInterval = null;
     }
 
     async loadTurnConfig() {
@@ -128,6 +130,7 @@ class VideoCall {
             console.log('Remote track received:', event.track.kind);
             document.getElementById('remoteVideo').srcObject = event.streams[0];
             document.getElementById('callStatus').textContent = `${gettext("Подключено")}`;
+            self.startCallTimer();
         };
         
         this.peerConnection.onicecandidate = function(event) {
@@ -228,11 +231,14 @@ class VideoCall {
         }
         if (this.peerConnection) this.peerConnection.close();
         if (this.websocket) this.websocket.close();
+        if (this.durationInterval) clearInterval(this.durationInterval);
         
         this.pendingCandidates = [];
+        this.callStartTime = null;
         document.querySelector('.video-call-overlay').classList.remove('active');
         document.getElementById('localVideo').srcObject = null;
         document.getElementById('remoteVideo').srcObject = null;
+        document.getElementById('callDuration').textContent = '00:00';
 
         const chat_content = document.getElementById('chat_content');
         if (chat_content) {
@@ -243,6 +249,18 @@ class VideoCall {
                 messages.style.height = 'calc(100vh - 205px)';
             }
         }
+    }
+
+    startCallTimer() {
+        this.callStartTime = Date.now();
+        const durationEl = document.getElementById('callDuration');
+        const self = this;
+        this.durationInterval = setInterval(function() {
+            const elapsed = Math.floor((Date.now() - self.callStartTime) / 1000);
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            durationEl.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }, 1000);
     }
 }
 
