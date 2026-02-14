@@ -2,6 +2,7 @@ let chats = document.querySelector(".chats_menu");
 let hide_chats = document.querySelector(".hide_chats");
 let user_info_extra = document.querySelector(".user_info_extra");
 let chat_content = document.querySelector(".chat_content");
+let video_call_overlay = document.querySelector(".video-call-overlay");
 let settings = document.querySelector(".settings");
 let search_chats = document.querySelector(".search_chats");
 
@@ -12,4 +13,5 @@ hide_chats.addEventListener("click", () => {
     chat_content.classList.toggle("hide");
     settings.classList.toggle("hide");
     search_chats.classList.toggle("hide");
+    video_call_overlay.classList.toggle("hide");
 });

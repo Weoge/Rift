@@ -49,19 +49,34 @@ class CallConsumer(AsyncWebsocketConsumer):
         logger.info(f'Received signal: {data.get("type")} in room {self.room_group_name}')
         data['sender_channel'] = self.channel_name
         
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                'type': 'webrtc_signal',
-                'data': data
-            }
-        )
+        if data.get('type') in ['audio_state', 'video_state']:
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'broadcast_signal',
+                    'data': data
+                }
+            )
+        else:
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'webrtc_signal',
+                    'data': data
+                }
+            )
 
     async def webrtc_signal(self, event):
         if event['data'].get('sender_channel') != self.channel_name:
             data = event['data'].copy()
             data.pop('sender_channel', None)
             logger.info(f'Forwarding signal: {data.get("type")}')
+            await self.send(text_data=json.dumps(data))
+    
+    async def broadcast_signal(self, event):
+        if event['data'].get('sender_channel') != self.channel_name:
+            data = event['data'].copy()
+            data.pop('sender_channel', None)
             await self.send(text_data=json.dumps(data))
 
     async def user_joined(self, event):

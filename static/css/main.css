@@ -3,7 +3,7 @@
     margin: 0;
     box-sizing: border-box;
     font-family: 'Arial', sans-serif;
-    outline: 0.1px solid red;
+    /* outline: 0.1px solid red; */
     overflow-x: hidden;
     overflow-y: visible;
 }
@@ -110,6 +110,16 @@ a {
     background-color: transparent;
 }
 
+.icon_bg {
+    background-color: #171819;
+    color: #fff;
+    width: 35px;
+    height: 35px;
+    margin: 0 5px;
+    position: relative;
+    border-radius: 25px;
+}
+
 .small:hover, .smaller:hover {
     box-shadow: 0 10px 20px rgba(123, 233, 164, 0.3);
     background-color: rgb(123, 233, 164) !important;
@@ -117,7 +127,7 @@ a {
     color: #000;
 }
 
-.small .icon {
+.small .icon, .icon_bg .icon {
     position: absolute;
     left: 50%;
     top: 50%;

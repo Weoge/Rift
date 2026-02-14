@@ -11,8 +11,30 @@
         <div class="call-status" id="callStatus">{% trans "Подключение..." %}</div>
         <div class="call-duration" id="callDuration">00:00</div>
         <div class="video flex">
-            <video class="bg" id="remoteVideo" autoplay playsinline></video>
-            <video class="bg" id="localVideo" autoplay muted playsinline></video>
+            <div class="remoteVideoContainer bg">
+                <div class="avatar_container" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1;">
+                    <img src="{{ avatar }}" class="talker">
+                </div>
+                <video style="z-index: 2;" id="remoteVideo" autoplay playsinline disablePictureInPicture></video>
+                <div style="z-index: 2;" class="videoInfo flex">
+                    <span id="remoteVideoInfo"></span>
+                    <div class="icon_bg micro_status">
+                        <svg class="icon" width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 9.4V5C15 3.34315 13.6569 2 12 2C10.8224 2 9.80325 2.67852 9.3122 3.66593M12 19V22M12 19C8.13401 19 5 15.866 5 12V10M12 19C15.866 19 19 15.866 19 12V10M8 22H16M2 2L22 22M12 15C10.3431 15 9 13.6569 9 12V9L14.1226 14.12C13.5796 14.6637 12.8291 15 12 15Z" stroke="red" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                </div>
+            </div>
+            <div class="localVideoContainer bg">
+                <div class="avatar_container" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1;">
+                    <img src="{{ avatar }}" class="talker">
+                </div>
+                <video style="z-index: 2;" id="localVideo" autoplay muted playsinline disablePictureInPicture></video>
+                <div style="z-index: 2;" class="videoInfo flex">
+                    <span id="localVideoInfo"></span>
+                    <div class="icon_bg micro_status">
+                        <svg class="icon" width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 9.4V5C15 3.34315 13.6569 2 12 2C10.8224 2 9.80325 2.67852 9.3122 3.66593M12 19V22M12 19C8.13401 19 5 15.866 5 12V10M12 19C15.866 19 19 15.866 19 12V10M8 22H16M2 2L22 22M12 15C10.3431 15 9 13.6569 9 12V9L14.1226 14.12C13.5796 14.6637 12.8291 15 12 15Z" stroke="red" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="call-controls flex">
             <button id="toggleAudio" class="small" onclick="videoCall.toggleAudio()">

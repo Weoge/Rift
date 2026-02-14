@@ -44,10 +44,6 @@
         overflow-x: hidden;
         overflow-y: scroll;
     }
-    #localVideo, #remoteVideo {
-        width: 400px !important;
-        height: 300px !important;
-    }
 }
 
 @media (max-width: 520px) {
@@ -124,10 +120,6 @@
         overflow-x: hidden;
         overflow-y: scroll;
     }
-    #localVideo, #remoteVideo {
-        width: 300px !important;
-        height: 225px !important;
-    }
 }
 
 @media (max-width: 384px) {
@@ -195,9 +187,5 @@
         height: calc(100vh - 200px);
         overflow-x: hidden;
         overflow-y: scroll;
-    }
-    #localVideo, #remoteVideo {
-        width: 200px !important;
-        height: 150px !important;
     }
 }

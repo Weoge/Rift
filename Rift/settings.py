@@ -21,7 +21,8 @@ ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
     "django",
-    "95.163.227.170"
+    "95.163.227.170",
+    "192.168.0.245"
 ]
 
 # Application definition
@@ -49,6 +50,7 @@ CSRF_TRUSTED_ORIGINS = [
     'http://*.*.*.*:8080',
     'http://95.163.227.170:8080',
     'http://riftproject.ru',
+    'http://192.168.0.245:8080',
     'https://*.*.*.*:8443',
     'https://95.163.227.170:8443',
     'https://riftproject.ru'
@@ -56,6 +58,7 @@ CSRF_TRUSTED_ORIGINS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'lang.middleware.LanguageMiddleware',
@@ -181,7 +184,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('redis', 6379)],
+            'hosts': [(os.environ.get('REDIS_HOST', 'localhost'), 6379)],
         },
     },
 }
