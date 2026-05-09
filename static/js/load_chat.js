@@ -1,3 +1,65 @@
+function createSkeletonMessage() {
+    const div = document.createElement('div');
+    div.className = 'message skeleton-message';
+    div.innerHTML = `
+        <div class="avatar_container">
+            <span class="blur_loader"></span>
+        </div>
+        <div class="message_content">
+            <p style="position: absolute; width: calc(100% - 90px); height: 14px;"><span class="blur_loader"></span></p>
+            <p class="message_text" style="position: absolute; width: calc(100% - 90px); height: 14px; top: 38px;"><span class="blur_loader"></span></p>
+            <span class="message_time" style="position: absolute; width: 35px; height: 10px; right: 10px; bottom: 10px;"><span class="blur_loader"></span></span>
+        </div>
+    `;
+    return div;
+}
+
+function addSkeletonMessages(count = 10) {
+    const messagesContainer = document.querySelector('.messages');
+    if (!messagesContainer) return;
+    
+    const scrollDownEl = messagesContainer.querySelector('.scroll_down');
+    let refNode = null;
+    if (scrollDownEl) {
+        refNode = scrollDownEl.nextSibling;
+    } else {
+        refNode = messagesContainer.firstChild;
+    }
+
+    for (let i = 0; i < count; i++) {
+        const skeleton = createSkeletonMessage();
+        messagesContainer.insertBefore(skeleton, refNode);
+    }
+}
+
+function removeSkeletonMessages() {
+    const messagesContainer = document.querySelector('.messages');
+    if (!messagesContainer) return;
+    
+    const skeletons = messagesContainer.querySelectorAll('.skeleton-message');
+    skeletons.forEach(skeleton => skeleton.remove());
+}
+
+let chatPagination = {
+    currentChatId: null,
+    totalCount: 0,
+    currentOffset: 0,
+    isLoading: false
+};
+
+function normalizeMessagesOrder(messages) {
+    if (!messages || messages.length < 2) return messages;
+    try {
+        const firstId = parseInt(messages[0].id, 10);
+        const lastId = parseInt(messages[messages.length - 1].id, 10);
+        if (!isNaN(firstId) && !isNaN(lastId) && firstId > lastId) {
+            return messages.slice().reverse();
+        }
+    } catch (e) {
+    }
+    return messages;
+}
+
 function loadChat(chatId, talker_username, talker_id) {
     const isBlurOn = getCookie('blur_effect') === 'on';
     document.querySelectorAll('.chat').forEach(chat => {
@@ -93,65 +155,210 @@ function loadChat(chatId, talker_username, talker_id) {
         startMessageTracking(chatId);
     })
 
-    fetch(`/app/messages/${chatId}/`)
+    chatPagination.currentChatId = chatId;
+    chatPagination.isLoading = false;
+    
+    loadChatMessages(chatId);
+}
+
+function loadChatMessages(chatId, offset = null) {
+    if (chatPagination.isLoading) return;
+    chatPagination.isLoading = true;
+    
+    let url = `/app/messages/${chatId}/?limit=20`;
+    if (offset !== null) {
+        url += `&offset=${offset}`;
+    }
+    
+    fetch(url)
     .then(response => response.json())
     .then(data => {
         const messagesContainer = document.querySelector('.messages');
-        messagesContainer.innerHTML = `
-            <div class="scroll_down small" onclick="scrollDown();">
-                <svg class="icon" width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-        `;
-        if (data.messages && data.messages.length > 0) {
-            const fragment = document.createDocumentFragment();
-            let lastDate = null;
+        if (!messagesContainer) {
+            chatPagination.isLoading = false;
+            return;
+        }
+        
+        chatPagination.totalCount = data.total_count;
+        chatPagination.currentOffset = data.offset;
+        
+        if (offset === null) {
+            messagesContainer.innerHTML = `
+                <div class="scroll_down small" onclick="scrollDown();">
+                    <svg class="icon" width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+            `;
             
-            data.messages.forEach(message => {
-                const messageDate = message.date;
+                if (data.messages && data.messages.length > 0) {
+                const fragment = document.createDocumentFragment();
+                let lastDate = null;
+                const messagesList = normalizeMessagesOrder(data.messages);
+
+                messagesList.forEach(message => {
+                    if (messagesContainer.querySelector(`.message[data-id="${message.id}"]`)) return;
+                    const messageDate = message.date;
+
+                    if (messageDate !== lastDate) {
+                        const dateSeparator = createDateSeparator(messageDate);
+                        fragment.appendChild(dateSeparator);
+                        lastDate = messageDate;
+                    }
+
+                    const messageEl = createMessageElement(message);
+                    fragment.appendChild(messageEl);
+                });
+                messagesContainer.appendChild(fragment);
                 
+                const isBlurOn = getCookie('blur_effect') === 'on';
+                if (isBlurOn) {
+                    messagesContainer.querySelectorAll('.message').forEach(el => el.classList.add('blured'));
+                }
+            updateSeparatorZIndex();
+            } else {
+                messagesContainer.innerHTML = `
+                    <div class="scroll_down small" onclick="scrollDown();">
+                        <svg class="icon" width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <p class="no_messages">${gettext("Сообщений пока нет")}</p>`;
+            }
+            
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            messagesContainer.addEventListener('scroll', function() {
+                const scrollBtn = document.querySelector('.scroll_down');
+                const isBlurOn = getCookie('blur_effect') === 'on';
+                
+                if (scrollBtn) {
+                    if (isBlurOn) scrollBtn.classList.add('blured');
+                    const isScrolledUp = messagesContainer.scrollHeight - messagesContainer.scrollTop - messagesContainer.clientHeight > 100;
+                    scrollBtn.classList.toggle('show', isScrolledUp);
+                }
+                
+                if (messagesContainer.scrollTop < 100 && chatPagination.currentOffset > 0 && !chatPagination.isLoading) {
+                    loadMoreOldMessages();
+                }
+            });
+        }
+        
+        chatPagination.isLoading = false;
+    })
+    .catch(error => {
+        console.error('Error loading messages:', error);
+        chatPagination.isLoading = false;
+    });
+}
+
+function removeDuplicateSeparators() {
+    const separators = document.querySelectorAll('.date-separator');
+    for (let i = separators.length - 1; i > 0; i--) {
+        if (separators[i].textContent.trim() === separators[i-1].textContent.trim()) {
+            separators[i].remove();
+        }
+    }
+}
+
+function loadMoreOldMessages() {
+    if (chatPagination.isLoading || !chatPagination.currentChatId) return;
+    
+    const messagesContainer = document.querySelector('.messages');
+    if (!messagesContainer) return;
+    
+    chatPagination.isLoading = true;
+    
+    addSkeletonMessages(10);
+    
+    const scrollHeightBefore = messagesContainer.scrollHeight;
+    const scrollTopBefore = messagesContainer.scrollTop;
+    
+    const newOffset = Math.max(0, chatPagination.currentOffset - 20);
+    
+    fetch(`/app/messages/${chatPagination.currentChatId}/?limit=20&offset=${newOffset}`)
+    .then(response => response.json())
+    .then(data => {
+        removeSkeletonMessages();
+        
+        if (data.messages && data.messages.length > 0) {
+            const firstExistingNode = messagesContainer.querySelector('.message:not(.skeleton-message), .date-separator');
+            const fragment = document.createDocumentFragment();
+            const messagesList = normalizeMessagesOrder(data.messages);
+
+            let lastDate = null;
+            const allSeparators = messagesContainer.querySelectorAll('.date-separator');
+            if (allSeparators.length > 0) {
+                lastDate = allSeparators[allSeparators.length - 1].textContent.trim();
+            }
+
+            messagesList.forEach(message => {
+                if (messagesContainer.querySelector(`.message[data-id="${message.id}"]`)) return;
+
+                const messageDate = message.date;
                 if (messageDate !== lastDate) {
                     const dateSeparator = createDateSeparator(messageDate);
                     fragment.appendChild(dateSeparator);
                     lastDate = messageDate;
                 }
-                
+
                 const messageEl = createMessageElement(message);
                 fragment.appendChild(messageEl);
             });
-            messagesContainer.appendChild(fragment);
-            if (isBlurOn) {
-                chatContent.querySelectorAll('.message').forEach(el => el.classList.add('blured'));
+
+            if (!fragment.hasChildNodes()) {
+                chatPagination.currentOffset = newOffset;
+                chatPagination.isLoading = false;
+                return;
             }
-        } else {
-            messagesContainer.innerHTML = `<p class="no_messages">${gettext("Сообщений пока нет")}</p>`;
+
+            if (firstExistingNode) {
+                firstExistingNode.parentNode.insertBefore(fragment, firstExistingNode);
+            }
+            removeDuplicateSeparators();
+            updateSeparatorZIndex();
+            
+            const isBlurOn = getCookie('blur_effect') === 'on';
+            if (isBlurOn) {
+                messagesContainer.querySelectorAll('.message:not(.skeleton-message)').forEach(el => {
+                    if (!el.classList.contains('blured')) {
+                        el.classList.add('blured');
+                    }
+                });
+            }
+            
+            const scrollHeightAfter = messagesContainer.scrollHeight;
+            const newScrollHeight = scrollTopBefore + (scrollHeightAfter - scrollHeightBefore);
+            messagesContainer.scrollTop = newScrollHeight;
         }
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        messagesContainer.addEventListener('scroll', function() {
-            const scrollBtn = document.querySelector('.scroll_down');
-            if (isBlurOn) {
-                scrollBtn.classList.add('blured');
-            }
-            if (scrollBtn) {
-                const isScrolledUp = messagesContainer.scrollHeight - messagesContainer.scrollTop - messagesContainer.clientHeight > 100;
-                scrollBtn.classList.toggle('show', isScrolledUp);
-            }
-        });
+        
+        chatPagination.currentOffset = newOffset;
+        chatPagination.isLoading = false;
     })
-    .catch(error => console.error('Error loading messages:', error));
+    .catch(error => {
+        console.error('Error loading more messages:', error);
+        removeSkeletonMessages();
+        chatPagination.isLoading = false;
+    });
 }
 
 function createDateSeparator(date) {
     const separator = document.createElement('div');
     separator.className = 'date-separator';
+    separator.style.position = 'sticky';
+    separator.style.top = '0';
     separator.innerHTML = `<span>${date}</span>`;
     return separator;
+}
+
+function updateSeparatorZIndex() {
+    const separators = document.querySelectorAll('.date-separator');
+    separators.forEach((sep, index) => {
+        sep.style.zIndex = index;
+    });
 }
 
 function createMessageElement(message) {
     const messageEl = document.createElement('div');
     messageEl.className = `message ${message.is_own ? 'sent' : 'received'}`;
     
-    const msgAvatarUrl = message.is_own ? message.user_avatar : message.sender_avatar;
+    const msgAvatarUrl = message.sender_avatar || message.user_avatar || message.avatar;
     const msgSenderName = message.is_own ? `${gettext("Вы")}` : message.sender;
     
     let imagesHtml = '';
@@ -161,9 +368,14 @@ function createMessageElement(message) {
         });
     }
     
+    let avatarHtml = '';
+    if (msgAvatarUrl) {
+        avatarHtml = `<img src="${msgAvatarUrl}" class="talker" loading="lazy" alt="${msgSenderName}">`;
+    }
+    
     messageEl.innerHTML = `
         <div class="avatar_container">
-            ${msgAvatarUrl ? `<img src="${msgAvatarUrl}" class="talker" loading="lazy">` : ''}
+            ${avatarHtml}
         </div>
         <div class="message_content">
             <p class="message_sender"><b>${msgSenderName}</b></p>
@@ -172,6 +384,16 @@ function createMessageElement(message) {
             <span class="message_time">${message.time}</span>
         </div>
     `;
+    const isBlurOn = getCookie('blur_effect') === 'on';
+    if (isBlurOn) {
+        messageEl.classList.add('blured');
+    }
+    if (message.date) {
+        messageEl.dataset.date = message.date;
+    }
+    if (message.id) {
+        messageEl.dataset.id = message.id;
+    }
     return messageEl;
 }
 

@@ -41,4 +41,8 @@ function addNewMessageToChat(message) {
     }
     messagesContainer.appendChild(messageEl);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    
+    if (typeof chatPagination !== 'undefined') {
+        chatPagination.totalCount += 1;
+    }
 }

@@ -46,7 +46,6 @@ function setupMessageForm(chatId, talker_username) {
                             text: messageText,
                             sender: '',
                             sender_avatar: null,
-                            user_avatar: null,
                             is_own: true,
                             time: now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0'),
                             images: []

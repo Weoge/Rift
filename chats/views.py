@@ -187,7 +187,18 @@ def get_chat_messages(request, chat_id):
         if chat.first_user != request.user and chat.second_user != request.user:
             return JsonResponse({'error': 'Access denied'}, status=403)
         
-        messages = chat.messege_set.order_by('create_time')
+        limit = int(request.GET.get('limit', 20))
+        
+        all_messages = chat.messege_set.order_by('create_time')
+        total_count = all_messages.count()
+        
+        if 'offset' in request.GET:
+            offset = int(request.GET.get('offset'))
+        else:
+            offset = max(0, total_count - limit)
+        
+        messages = all_messages[offset:offset + limit]
+        
         messages_data = []
         for message in messages:
             try:
@@ -210,6 +221,7 @@ def get_chat_messages(request, chat_id):
             
             messages_data.append({
                 'text': decrypted_text,
+                'id': message.id,
                 'sender': message.sender.username,
                 'sender_id': message.sender.id,
                 'sender_avatar': message.sender.avatar.image.url if hasattr(message.sender, 'avatar') else None,
@@ -220,7 +232,12 @@ def get_chat_messages(request, chat_id):
                 'images': images
             })
         
-        return JsonResponse({'messages': messages_data})
+        return JsonResponse({
+            'messages': messages_data,
+            'total_count': total_count,
+            'offset': offset,
+            'limit': limit
+        })
     except Chat.DoesNotExist:
         return JsonResponse({'error': 'Chat not found'}, status=404)
 
